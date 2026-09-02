@@ -24,7 +24,6 @@ export default function Navbar(){
           <Link to="/" className="px-3 py-2 rounded-lg hover:bg-white/10">Home</Link>
           <Link to="/games" className="px-3 py-2 rounded-lg hover:bg-white/10">Games</Link>
           <Link to="/software" className="px-3 py-2 rounded-lg hover:bg-white/10">Software</Link>
-          <Link to="/category/action" className="px-3 py-2 rounded-lg hover:bg-white/10">Categories</Link>
         </nav>
         <form onSubmit={onSearch} className="flex-1 max-w-[420px] hidden sm:flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-xl px-3 py-2 focus-within:border-violet-500/50 focus-within:bg-white/[0.08] transition">
           <Search className="w-4 h-4 text-white/50" />
