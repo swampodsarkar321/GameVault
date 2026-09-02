@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Sparkles, ArrowRight, ShieldCheck } from "lucide-react"
+import { Sparkles, ArrowRight } from "lucide-react"
 export default function Hero(){
   return (
     <section className="relative overflow-hidden rounded-[28px] border border-white/[0.06] bg-gradient-to-br from-[#0F1424] via-[#101636] to-[#0F1424] p-6 md:p-10 mt-6">
@@ -14,7 +14,6 @@ export default function Hero(){
             <Link to="/games" className="btn-primary px-7">Browse Games <ArrowRight className="w-4 h-4"/></Link>
             <Link to="/software" className="btn-ghost">Explore Software</Link>
           </div>
-          <div className="flex items-center gap-2 text-xs text-white/50 mt-4"><ShieldCheck className="w-4 h-4 text-emerald-400"/> Only legally distributable content • Verified mirrors</div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           {[
