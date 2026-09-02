@@ -1,0 +1,28 @@
+{
+  "rules": {
+    "games": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+    },
+    "software": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+    },
+    "users": {
+      "$uid": {
+        ".read": true,
+        ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('isAdmin').val() === true"
+      }
+    },
+    "favorites": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+    }
+  }
+}
