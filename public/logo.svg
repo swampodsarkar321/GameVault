@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 32" width="120" height="32" role="img" aria-label="GameVault">
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6C5CFF"/>
+      <stop offset="100%" stop-color="#00E5CC"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="9" fill="url(#g2)"/>
+  <g transform="translate(8 8.5)" fill="white">
+    <rect x="0" y="4.5" width="16" height="8" rx="4" opacity="0.95"/>
+    <circle cx="4" cy="8.5" r="1.2" fill="#0F1424"/><circle cx="6.3" cy="8.5" r="1.2" fill="#0F1424"/><circle cx="5.15" cy="7" r="1.2" fill="#0F1424"/><circle cx="5.15" cy="10" r="1.2" fill="#0F1424"/>
+    <rect x="10.2" y="7" width="3.3" height="1" rx="0.5" fill="#0F1424"/><rect x="11.35" y="5.8" width="1" height="3.3" rx="0.5" fill="#0F1424"/>
+  </g>
+  <text x="42" y="20.5" font-family="Space Grotesk, system-ui, sans-serif" font-weight="700" font-size="15" fill="white">GameVault</text>
+</svg>
