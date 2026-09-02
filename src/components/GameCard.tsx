@@ -25,7 +25,6 @@ export default function GameCard({ game }: { game: Game }){
         </div>
         <div className="text-xs text-white/50 mt-1 line-clamp-1">{genre.join(" • ")}</div>
         <div className="flex items-center gap-2 mt-2 text-xs">
-          <span className="badge">{game.version}</span>
           <span className="text-white/40">{game.size}</span>
           <Link to={`/game/${game.slug}`} className="ml-auto text-violet-300 hover:text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition">View details →</Link>
         </div>
