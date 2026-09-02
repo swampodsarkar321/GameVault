@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import { useFSPlus } from "../context/FSPlusContext"
-import { Loader2, WifiOff, RefreshCw, ShieldAlert } from "lucide-react"
+import { Loader2, WifiOff, RefreshCw, ShieldAlert, Zap, Shield, Globe } from "lucide-react"
 
 export default function FSPlusGate({ children }: { children: React.ReactNode }) {
   const { status, isChecking, refresh } = useFSPlus()
@@ -9,7 +9,6 @@ export default function FSPlusGate({ children }: { children: React.ReactNode }) 
   })
   const didCheck = useRef(false)
 
-  // Single fresh check — guard StrictMode double-mount
   useEffect(() => {
     if (didCheck.current) return
     didCheck.current = true
@@ -20,17 +19,39 @@ export default function FSPlusGate({ children }: { children: React.ReactNode }) 
 
   if (isChecking) {
     return (
-      <div className="fixed inset-0 z-[100] bg-[#070A12] grid place-items-center p-6">
-        <div className="w-full max-w-md card p-8 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-400 grid place-items-center mx-auto animate-pulse">
-            <Loader2 className="w-8 h-8 text-white animate-spin" />
+      <div className="fixed inset-0 z-[100] bg-[#070A12] grid place-items-center p-6 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-600/[0.08] via-transparent to-cyan-400/[0.06]" />
+        <div className="absolute -top-24 -right-24 w-[520px] h-[520px] bg-violet-600/15 blur-[90px] rounded-full animate-pulse" />
+        <div className="absolute -bottom-24 -left-24 w-[520px] h-[520px] bg-cyan-400/10 blur-[90px] rounded-full animate-pulse" style={{ animationDelay: "1s" }} />
+        <div className="w-full max-w-md card p-8 text-center relative backdrop-blur-xl border-white/10 shadow-2xl">
+          <div className="relative w-20 h-20 mx-auto">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-400 animate-pulse blur-[1px]" />
+            <div className="absolute inset-[2px] rounded-2xl bg-[#0F1424] grid place-items-center">
+              <Loader2 className="w-8 h-8 text-violet-400 animate-spin" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-ping" />
+            <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-cyan-400 rounded-full animate-ping" style={{ animationDelay: "0.5s" }} />
           </div>
-          <h2 className="font-display font-bold text-lg mt-4">Checking…</h2>
-          <p className="text-sm text-violet-300 mt-1 font-medium">Connect top high speed downloading site check চলছে…</p>
-          <p className="text-xs text-white/40 mt-2">Site open হবে না যতক্ষণ না check শেষ হয় • 5s timeout</p>
-          <div className="mt-4 h-1.5 bg-white/10 rounded-full overflow-hidden">
-            <div className="h-full w-1/3 bg-violet-600 rounded-full animate-[shimmer_1s_infinite]" style={{ animation: "shimmer 1s infinite" }} />
+          <h2 className="font-display font-bold text-lg mt-5 tracking-tight">Verifying Connection</h2>
+          <p className="text-sm text-white/60 mt-1">Checking high-speed network for optimal downloads</p>
+          <div className="flex items-center justify-center gap-1.5 mt-2 text-xs font-medium text-violet-300">
+            <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" />
+            <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
+            <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
+            <span className="ml-1">Please wait</span>
           </div>
+          <div className="mt-6 space-y-3">
+            <div className="h-1.5 bg-white/10 rounded-full overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[shimmer_1.5s_infinite]" />
+              <div className="h-full w-3/5 bg-gradient-to-r from-violet-600 to-cyan-400 rounded-full animate-pulse" />
+            </div>
+            <div className="flex justify-between text-xs">
+              <span className="flex items-center gap-1.5 text-white/50"><Shield className="w-3 h-3 text-emerald-400" /> Secure</span>
+              <span className="flex items-center gap-1.5 text-white/50"><Zap className="w-3 h-3 text-amber-400" /> Fast</span>
+              <span className="flex items-center gap-1.5 text-white/50"><Globe className="w-3 h-3 text-cyan-400" /> Verified</span>
+            </div>
+          </div>
+          <p className="text-xs text-white/30 mt-4">This will only take a moment • 5s timeout</p>
         </div>
       </div>
     )
