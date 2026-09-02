@@ -7,7 +7,7 @@ export default function Hero(){
       <div className="absolute -top-24 -right-24 w-[520px] h-[520px] bg-violet-600/20 blur-[90px] rounded-full pointer-events-none" />
       <div className="relative grid lg:grid-cols-[1.1fr_0.9fr] gap-8 items-center">
         <div>
-          <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-full px-3 py-1"><Sparkles className="w-3.5 h-3.5"/> CURATED VAULT — 100% LEGAL & FREE</div>
+          <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-full px-3 py-1"><Sparkles className="w-3.5 h-3.5"/> PC GAMES • VERIFIED SOURCES • DISCOVER</div>
           <h1 className="font-display font-bold text-[32px] md:text-[48px] leading-[0.95] mt-4">GameVault<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-300">Discover. Explore. Download.</span></h1>
           <p className="text-white/60 mt-4 max-w-xl leading-relaxed">A simple hub for discovering PC games and finding available download sources in one place.</p>
           <div className="flex flex-wrap gap-3 mt-6">
