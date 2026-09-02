@@ -1,27 +1,20 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useFSPlus } from "../context/FSPlusContext"
-import { Loader2, WifiOff, RefreshCw, ShieldAlert, CheckCircle2 } from "lucide-react"
+import { Loader2, WifiOff, RefreshCw, ShieldAlert } from "lucide-react"
 
 export default function FSPlusGate({ children }: { children: React.ReactNode }) {
   const { status, isChecking, refresh } = useFSPlus()
   const [bypass, setBypass] = useState(() => {
     try { return localStorage.getItem("fs_bypass") === "1" } catch { return false }
   })
-  const [showSuccess, setShowSuccess] = useState(false)
+  const didCheck = useRef(false)
 
-  // Force fresh check on first mount
+  // Single fresh check — guard StrictMode double-mount
   useEffect(() => {
+    if (didCheck.current) return
+    didCheck.current = true
     refresh()
   }, [refresh])
-
-  // When online, show exact success line briefly then enter site
-  useEffect(() => {
-    if (status === "online" && !bypass) {
-      setShowSuccess(true)
-      const t = setTimeout(() => setShowSuccess(false), 1200)
-      return () => clearTimeout(t)
-    }
-  }, [status, bypass])
 
   if (bypass) return <>{children}</>
 
@@ -79,22 +72,6 @@ export default function FSPlusGate({ children }: { children: React.ReactNode }) 
           >
             Clear bypass & reload
           </button>
-        </div>
-      </div>
-    )
-  }
-
-  // Online — show success briefly, then enter site
-  if (showSuccess) {
-    return (
-      <div className="fixed inset-0 z-[100] bg-[#070A12] grid place-items-center p-6">
-        <div className="w-full max-w-md card p-8 text-center border-emerald-500/20 bg-emerald-500/[0.04]">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 grid place-items-center mx-auto">
-            <CheckCircle2 className="w-8 h-8 text-emerald-300" />
-          </div>
-          <h2 className="font-display font-bold text-base mt-4 leading-tight">Online: BDIX high-speed download active</h2>
-          <p className="text-xs text-emerald-300 mt-2 font-medium">Connect top high speed downloading site check passed — site opening…</p>
-          <div className="mt-4 flex justify-center"><Loader2 className="w-5 h-5 text-emerald-400 animate-spin" /></div>
         </div>
       </div>
     )
