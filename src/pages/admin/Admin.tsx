@@ -4,7 +4,9 @@ import { useToast } from "../../context/ToastContext"
 import { sampleGames, sampleSoftware } from "../../data/sampleData"
 import { createGame, updateGame, deleteGame, createSoftware, updateSoftware, deleteSoftware } from "../../firebase/firestore"
 import { isRealtimeConfigured } from "../../firebase/config"
-import { subscribeGamesRT, subscribeSoftwareRT, seedRealtimeIfEmpty } from "../../firebase/realtimeDb"
+import { subscribeGamesRT, subscribeSoftwareRT } from "../../firebase/realtimeDb"
+import { ref, remove } from "firebase/database"
+import { rtdb } from "../../firebase/config"
 import Modal from "../../components/Modal"
 import { setPageMeta } from "../../utils/seo"
 import { Link } from "react-router-dom"
@@ -74,7 +76,7 @@ export default function Admin(){
         push("Game updated","success")
       } else {
         if(isRealtimeConfigured) await createGame(payload)
-        const newItem = { id: `g${Date.now()}`, ...payload, downloads: payload.downloads || [{name:"Primary Mirror",url:"https://example.com",provider:"GameVault",size:payload.size}], requirements: payload.requirements || sampleGames[0].requirements, createdAt: new Date() }
+        const newItem = { id: `g${Date.now()}`, ...payload, downloads: payload.downloads || [{name:"Primary — Direct",url:"https://example.com/download/game.zip",provider:"GameVault CDN",size:payload.size}], requirements: payload.requirements || { minimum:{os:"Windows 10 64-bit",cpu:"Intel Core i5-8400",ram:"8 GB RAM",gpu:"GTX 1060 6GB",storage:"30 GB"}, recommended:{os:"Windows 11 64-bit",cpu:"Intel Core i7-10700",ram:"16 GB RAM",gpu:"RTX 3060",storage:"30 GB SSD"} }, createdAt: Date.now() }
         setGames(g=> [newItem, ...g]); push("Game created","success")
       }
       setShowGameModal(false); setEditingGame(null)
@@ -121,7 +123,7 @@ export default function Admin(){
           <div className="card p-5"><div className="text-xs text-white/50">Users (demo)</div><div className="text-2xl font-bold mt-1">1.2k</div></div>
           <div className="card p-5 md:col-span-4">
             <h3 className="font-semibold">Quick actions</h3>
-            <div className="flex gap-2 mt-3"><button onClick={()=>{setEditingGame(null); setShowGameModal(true)}} className="btn-primary text-sm">Add Game</button><button onClick={()=>{setEditingSoft(null); setShowSoftModal(true)}} className="btn-ghost text-sm">Add Software</button>{isRealtimeConfigured && <button onClick={async()=>{ await seedRealtimeIfEmpty(sampleGames as any, sampleSoftware as any); push("Seeded Realtime DB with sample data","success")}} className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm hover:bg-white/10">Seed RTDB</button>}</div>
+            <div className="flex gap-2 mt-3"><button onClick={()=>{setEditingGame(null); setShowGameModal(true)}} className="btn-primary text-sm">Add Game</button><button onClick={()=>{setEditingSoft(null); setShowSoftModal(true)}} className="btn-ghost text-sm">Add Software</button><button onClick={async()=>{ if(!confirm("Remove ALL games & software from Realtime DB? This clears dummy collections.")) return; await remove(ref(rtdb,"games")); await remove(ref(rtdb,"software")); setGames([]); setSoftware([]); push("Cleared — dummy collections removed","success")}} className="bg-red-500/10 border border-red-500/20 text-red-300 rounded-xl px-4 py-2 text-sm hover:bg-red-500/20">Clear Dummy (RTDB)</button></div>
             {!isRealtimeConfigured && <p className="text-xs text-amber-300/80 mt-3">No Firebase — changes are local only. Add env vars (see .env.example) — Realtime DB at fram-and-go will enable live admin sync.</p>}
             {isRealtimeConfigured && <p className="text-xs text-emerald-300/80 mt-3">Realtime DB: fram-and-go (asia-southeast1) — admin changes sync live to all clients. Rules: database.rules.json</p>}
           </div>
@@ -207,7 +209,7 @@ function GameForm({ initial, onSave, onCancel }: any){
       <Field label="Cover Image URL" value={f.coverImage} onChange={(e:any)=>setF({...f,coverImage:e.target.value})} placeholder="https://..." required />
       <Field label="Genre (comma separated)" value={f.genre} onChange={(e:any)=>setF({...f,genre:e.target.value})} />
       <Field label="Size" value={f.size} onChange={(e:any)=>setF({...f,size:e.target.value})} placeholder="e.g. 5 GB" />
-      <Field label="Download Links (comma separated URLs) — FS Plus primary + mirrors" value={f.downloadLinks} onChange={(e:any)=>setF({...f,downloadLinks:e.target.value})} placeholder="https://fs.plus.net.bd/Games/game.zip, https://example.com/mirror2" />
+      <Field label="Download Links (comma separated URLs) — Primary + mirrors" value={f.downloadLinks} onChange={(e:any)=>setF({...f,downloadLinks:e.target.value})} placeholder="https://example.com/download/game.zip, https://example.com/mirror2" />
       <p className="text-xs text-white/40 -mt-2">Admin এখানে যা দেবেন, user download card-এ তাই দেখাবে। Card design নিচে দেখুন।</p>
       <div className="flex gap-4 text-sm"><label className="flex items-center gap-2"><input type="checkbox" checked={!!f.featured} onChange={e=>setF({...f,featured:e.target.checked})}/> Featured</label><label className="flex items-center gap-2"><input type="checkbox" checked={!!f.popular} onChange={e=>setF({...f,popular:e.target.checked})}/> Popular</label></div>
       {/* Preview of user download card as admin sees */}

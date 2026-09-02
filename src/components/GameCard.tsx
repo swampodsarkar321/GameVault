@@ -7,7 +7,6 @@ export default function GameCard({ game }: { game: Game }){
   const { isFav, toggle } = useFavorites()
   const fav = isFav(game.id)
   const genre = arr((game as any).genre)
-  const platform = arr((game as any).platform)
   return (
     <div className="group card hover:bg-nexus-cardHover transition overflow-hidden flex flex-col">
       <Link to={`/game/${game.slug}`} className="relative block overflow-hidden">
@@ -16,7 +15,6 @@ export default function GameCard({ game }: { game: Game }){
         <div className="absolute bottom-2 left-2 right-2 flex gap-1.5 flex-wrap opacity-0 group-hover:opacity-100 transition">
           {genre.slice(0,2).map(g=> <span key={g} className="badge backdrop-blur bg-black/40 text-white text-[11px]">{g}</span>)}
         </div>
-        <span className="absolute top-2 left-2 badge bg-[#070A12]/80 backdrop-blur">{platform[0] || "Windows"}</span>
       </Link>
       <div className="p-3 flex-1 flex flex-col">
         <div className="flex items-start justify-between gap-2">
