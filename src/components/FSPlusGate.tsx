@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import { useFSPlus } from "../context/FSPlusContext"
-import { Loader2, WifiOff, RefreshCw, ShieldAlert, Zap, Shield, Globe } from "lucide-react"
+import { Loader2, WifiOff, RefreshCw, ShieldAlert, Zap, Shield, Globe, Wifi, Router } from "lucide-react"
 
 export default function FSPlusGate({ children }: { children: React.ReactNode }) {
   const { status, isChecking, refresh } = useFSPlus()
@@ -23,7 +23,9 @@ export default function FSPlusGate({ children }: { children: React.ReactNode }) 
         <div className="absolute inset-0 bg-gradient-to-br from-violet-600/[0.08] via-transparent to-cyan-400/[0.06]" />
         <div className="absolute -top-24 -right-24 w-[520px] h-[520px] bg-violet-600/15 blur-[90px] rounded-full animate-pulse" />
         <div className="absolute -bottom-24 -left-24 w-[520px] h-[520px] bg-cyan-400/10 blur-[90px] rounded-full animate-pulse" style={{ animationDelay: "1s" }} />
+        {/* Loading Screen */}
         <div className="w-full max-w-md card p-8 text-center relative backdrop-blur-xl border-white/10 shadow-2xl">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-600/5 to-cyan-400/5 animate-pulse pointer-events-none" />
           <div className="relative w-20 h-20 mx-auto">
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-400 animate-pulse blur-[1px]" />
             <div className="absolute inset-[2px] rounded-2xl bg-[#0F1424] grid place-items-center">
@@ -38,7 +40,7 @@ export default function FSPlusGate({ children }: { children: React.ReactNode }) 
             <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" />
             <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
             <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
-            <span className="ml-1">Please wait</span>
+            <span className="ml-1">Loading — Please wait</span>
           </div>
           <div className="mt-6 space-y-3">
             <div className="h-1.5 bg-white/10 rounded-full overflow-hidden relative">
@@ -59,20 +61,52 @@ export default function FSPlusGate({ children }: { children: React.ReactNode }) 
 
   if (status === "offline") {
     return (
-      <div className="fixed inset-0 z-[100] bg-[#070A12] grid place-items-center p-6">
-        <div className="w-full max-w-md card p-8 text-center border-red-500/20">
-          <div className="w-16 h-16 rounded-2xl bg-red-500/15 border border-red-500/30 grid place-items-center mx-auto">
-            <WifiOff className="w-8 h-8 text-red-300" />
+      <div className="fixed inset-0 z-[100] bg-[#070A12] grid place-items-center p-6 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-red-600/[0.08] via-transparent to-amber-500/[0.06]" />
+        <div className="absolute -top-24 -right-24 w-[520px] h-[520px] bg-red-600/15 blur-[90px] rounded-full animate-pulse" />
+        <div className="absolute -bottom-24 -left-24 w-[520px] h-[520px] bg-amber-500/10 blur-[90px] rounded-full animate-pulse" style={{ animationDelay: "1s" }} />
+        <div className="w-full max-w-md card p-8 text-center border-red-500/20 relative backdrop-blur-xl shadow-2xl">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500/5 to-amber-500/5 animate-pulse pointer-events-none" />
+          <div className="relative w-20 h-20 mx-auto">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500 to-amber-500 animate-pulse blur-[1px]" />
+            <div className="absolute inset-[2px] rounded-2xl bg-[#1A0F0F] grid place-items-center">
+              <WifiOff className="w-8 h-8 text-red-300 animate-pulse" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-400 rounded-full animate-ping" />
           </div>
-          <h2 className="font-display font-bold text-xl mt-4">Sorry — You are not available for this site</h2>
-          <p className="text-sm text-white/60 mt-2">Connect top high speed downloading site check failed</p>
-          <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3 mt-4 text-xs text-red-200 text-left">
-            <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
-            <span>BDIX-র বাইরে আছেন বা server unreachable। Check pass না হলে site open হবে না।</span>
+          <h2 className="font-display font-bold text-xl mt-5 tracking-tight">Connection Check Failed</h2>
+          <p className="text-sm text-white/60 mt-1">Sorry — You are not available for this site</p>
+          {/* Beautiful animation — wifi/provider hint */}
+          <div className="mt-4 bg-gradient-to-br from-amber-500/10 to-red-500/10 border border-amber-500/20 rounded-xl p-4 text-left relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_2s_infinite]" />
+            <div className="flex gap-3 relative">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/20 grid place-items-center shrink-0 animate-pulse">
+                <Router className="w-5 h-5 text-amber-300" />
+              </div>
+              <div className="flex-1">
+                <div className="text-sm font-semibold text-amber-200 flex items-center gap-1.5">
+                  <Wifi className="w-4 h-4" /> WiFi / Provider Change Required
+                </div>
+                <p className="text-xs text-white/60 mt-1 leading-relaxed">
+                  Your current network does not support BDIX high-speed. Please <b className="text-white">switch to a BDIX-enabled WiFi/Provider</b> or contact your ISP to enable BDIX for full-speed access.
+                </p>
+                <div className="flex gap-1.5 mt-2">
+                  <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-bounce" />
+                  <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
+                  <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
+                  <span className="text-xs text-amber-300/70 ml-1">Try different network</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 mt-6">
-            <button onClick={() => refresh()} className="btn-primary justify-center">
-              <RefreshCw className="w-4 h-4" /> Retry Check
+          <div className="flex items-start gap-2 bg-red-500/10 border border-red-500/20 rounded-xl p-3 mt-3 text-xs text-red-200 text-left">
+            <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5 animate-pulse" />
+            <span>Check failed — site will not open until verified.</span>
+          </div>
+          <p className="text-xs text-white/30 mt-3">Tip: Enable BDIX or change provider for best experience</p>
+          <div className="grid grid-cols-2 gap-2 mt-5">
+            <button onClick={() => refresh()} className="btn-primary justify-center group">
+              <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition duration-500" /> Retry Check
             </button>
             <button
               onClick={() => {
