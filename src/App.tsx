@@ -19,13 +19,26 @@ import Downloads from "./pages/Downloads"
 import { FSPlusProvider } from "./context/FSPlusContext"
 import { DownloadManagerProvider } from "./context/DownloadManagerContext"
 import FSPlusGate from "./components/FSPlusGate"
+import { useEffect } from "react"
+import { trackVisit, trackAdImpression } from "./utils/analytics"
 const LazyAdmin = lazy(()=> import("./pages/admin/Admin"))
+
+function AnalyticsTracker(){
+  useEffect(()=>{
+    trackVisit()
+    // Count AdCash show — after aclib loads
+    const t = setTimeout(()=> trackAdImpression("e6q6hxg91y"), 1500)
+    return ()=> clearTimeout(t)
+  },[])
+  return null
+}
 
 function App(){
   return (
     <FSPlusProvider>
       <DownloadManagerProvider>
       <BrowserRouter>
+        <AnalyticsTracker/>
         <FSPlusGate>
           <Routes>
             <Route element={<MainLayout/>}>

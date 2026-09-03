@@ -5,13 +5,15 @@ import { sampleGames, sampleSoftware } from "../../data/sampleData"
 import { createGame, updateGame, deleteGame, createSoftware, updateSoftware, deleteSoftware } from "../../firebase/firestore"
 import { isRealtimeConfigured } from "../../firebase/config"
 import { subscribeGamesRT, subscribeSoftwareRT } from "../../firebase/realtimeDb"
-import { ref, remove } from "firebase/database"
+import { ref, remove, onValue } from "firebase/database"
 import { rtdb } from "../../firebase/config"
 import Modal from "../../components/Modal"
 import { setPageMeta } from "../../utils/seo"
 import { Link } from "react-router-dom"
+import { Eye, Download, Megaphone } from "lucide-react"
+import { getLocalCounts } from "../../utils/analytics"
 
-type Tab = "overview"|"games"|"software"|"users"|"settings"
+type Tab = "overview"|"games"|"software"|"users"|"analytics"|"settings"
 export default function Admin(){
   const { isAdmin, user, loading } = useAuth()
   const { push } = useToast()
@@ -24,6 +26,7 @@ export default function Admin(){
   const [showSoftModal,setShowSoftModal]=useState(false)
   const [confirmDelete,setConfirmDelete]=useState<{type:'game'|'software', id:string}|null>(null)
   const [rtLive,setRtLive]=useState(false)
+  const [analytics,setAnalytics]=useState<{visits:number, downloads:number, ads:number, dailyVisits:number, dailyDownloads:number, dailyAds:number, recent:any[]}>({visits:0, downloads:0, ads:0, dailyVisits:0, dailyDownloads:0, dailyAds:0, recent:[]})
   useEffect(()=> setPageMeta("Admin"),[])
   // Live sync via Realtime DB — admin stays connected
   useEffect(()=>{
@@ -31,6 +34,39 @@ export default function Admin(){
     const unsubG = subscribeGamesRT((list)=> { if(list.length) { setGames(list); setRtLive(true) } })
     const unsubS = subscribeSoftwareRT((list)=> { if(list.length) setSoftware(list) })
     return ()=> { unsubG(); unsubS() }
+  },[])
+  // Analytics live sync — anonymous counts
+  useEffect(()=>{
+    if(!isRealtimeConfigured){
+      const local = getLocalCounts()
+      setAnalytics({ visits: local.visits, downloads: local.downloads, ads: local.ads, dailyVisits: 0, dailyDownloads: 0, dailyAds: 0, recent: [] })
+      return
+    }
+    const today = new Date().toISOString().slice(0,10)
+    const unsubs: (()=>void)[] = []
+    const refs = [
+      { path: "analytics/visits/total", key: "visits" },
+      { path: `analytics/visits/daily/${today}`, key: "dailyVisits" },
+      { path: "analytics/downloads/total", key: "downloads" },
+      { path: `analytics/downloads/daily/${today}`, key: "dailyDownloads" },
+      { path: "analytics/ads/total", key: "ads" },
+      { path: `analytics/ads/daily/${today}`, key: "dailyAds" },
+    ]
+    refs.forEach(({path, key})=>{
+      const r = ref(rtdb, path)
+      const off = onValue(r, snap=> {
+        const v = snap.exists() ? Number(snap.val()) : 0
+        setAnalytics(prev=> ({...prev, [key]: v}))
+      })
+      unsubs.push(()=> off())
+    })
+    const recentRef = ref(rtdb, "analytics/downloads/recent")
+    const offRecent = onValue(recentRef, snap=>{
+      const v = snap.exists() ? snap.val() : []
+      setAnalytics(prev=> ({...prev, recent: Array.isArray(v)? v.slice(0,10): []}))
+    })
+    unsubs.push(()=> offRecent())
+    return ()=> unsubs.forEach(fn=>fn())
   },[])
   if(loading) return <div className="py-10 text-white/50">Loading...</div>
   if(!user) return <div className="py-16 text-center card p-10"><h2 className="font-display font-bold">Login required</h2><p className="text-white/50 text-sm mt-2">Admin area requires authentication.</p><Link to="/login" className="btn-primary mt-4">Login</Link></div>
@@ -112,7 +148,7 @@ export default function Admin(){
         <span className={`text-xs px-2 py-1 rounded-full border ${isRealtimeConfigured?"bg-emerald-500/15 border-emerald-500/30 text-emerald-300":"bg-amber-500/15 border-amber-500/30 text-amber-300"}`}>{isRealtimeConfigured? (rtLive?"Realtime DB Live":"Realtime DB Connected") : "Local Demo Mode"}</span>
       </div>
       <div className="flex gap-2 mt-4 overflow-x-auto">
-        {(["overview","games","software","users","settings"] as Tab[]).map(t=> <button key={t} onClick={()=>setTab(t)} className={`px-4 py-2 rounded-xl text-sm capitalize border whitespace-nowrap ${tab===t?"bg-violet-600 border-violet-500 text-white":"bg-white/5 border-white/10 text-white/70"}`}>{t}</button>)}
+        {(["overview","games","software","users","analytics","settings"] as Tab[]).map(t=> <button key={t} onClick={()=>setTab(t)} className={`px-4 py-2 rounded-xl text-sm capitalize border whitespace-nowrap ${tab===t?"bg-violet-600 border-violet-500 text-white":"bg-white/5 border-white/10 text-white/70"}`}>{t}</button>)}
       </div>
 
       {tab==="overview" && (
@@ -170,6 +206,10 @@ export default function Admin(){
         </div>
       )}
 
+      {tab==="analytics" && (
+        <AdminAnalytics analytics={analytics} setAnalytics={setAnalytics} />
+      )}
+
       {tab==="settings" && (
         <div className="card p-6 mt-6">
           <h3 className="font-semibold">Site Settings</h3>
@@ -192,6 +232,71 @@ export default function Admin(){
         <p className="text-sm text-white/70">Are you sure you want to delete this item? This action cannot be undone.</p>
         <div className="flex gap-2 justify-end mt-4"><button onClick={()=>setConfirmDelete(null)} className="btn-ghost text-sm">Cancel</button><button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white rounded-xl px-4 py-2 text-sm font-medium">Delete</button></div>
       </Modal>
+    </div>
+  )
+}
+
+function AdminAnalytics({ analytics, setAnalytics }: any){
+  const totalVisits = analytics.visits || 0
+  const totalDownloads = analytics.downloads || 0
+  const totalAds = analytics.ads || 0
+  const dailyVisits = analytics.dailyVisits || 0
+  const dailyDownloads = analytics.dailyDownloads || 0
+  const dailyAds = analytics.dailyAds || 0
+  const recent = analytics.recent || []
+  const clearAnalytics = async ()=>{
+    if(!confirm("Clear all analytics counts? (anonymous, no IP stored)")) return
+    try {
+      const { set } = await import("firebase/database")
+      await set(ref(rtdb, "analytics"), null)
+      setAnalytics({ visits:0, downloads:0, ads:0, dailyVisits:0, dailyDownloads:0, dailyAds:0, recent:[] })
+      localStorage.removeItem("gv_analytics_visits"); localStorage.removeItem("gv_analytics_downloads"); localStorage.removeItem("gv_analytics_ads")
+    } catch {}
+  }
+  return (
+    <div className="mt-6 space-y-4">
+      <div className="card p-5">
+        <h3 className="font-semibold flex items-center gap-2"><Eye className="w-5 h-5 text-cyan-400"/> Anonymous Analytics <span className="text-xs font-normal px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300 ml-2">No IP • No personal data</span></h3>
+        <p className="text-xs text-white/50 mt-1">User amar site dukhe dekha jabe (anonymous visits), kotjon download kortese, ar kotgulo AdCash ad show hocche — proper count, 100% anonymous.</p>
+        <div className="grid md:grid-cols-3 gap-4 mt-4">
+          <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-4">
+            <div className="flex items-center gap-2 text-xs text-white/50"><Eye className="w-4 h-4 text-cyan-400"/> Site Visits</div>
+            <div className="text-2xl font-bold mt-1">{totalVisits.toLocaleString()}</div>
+            <div className="text-xs text-white/40">Today: <b className="text-white">{dailyVisits}</b> • Sessions (anonymous)</div>
+            <div className="text-[11px] text-white/30 mt-1">Counts 1 per session (sessionStorage) — no IP stored.</div>
+          </div>
+          <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-4">
+            <div className="flex items-center gap-2 text-xs text-white/50"><Download className="w-4 h-4 text-violet-400"/> Downloads</div>
+            <div className="text-2xl font-bold mt-1">{totalDownloads.toLocaleString()}</div>
+            <div className="text-xs text-white/40">Today: <b className="text-white">{dailyDownloads}</b> • Total via Download Manager</div>
+            <div className="text-[11px] text-white/30 mt-1">Every “Download Now — Choose Folder” click increments.</div>
+          </div>
+          <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-4">
+            <div className="flex items-center gap-2 text-xs text-white/50"><Megaphone className="w-4 h-4 text-amber-400"/> AdCash Shows</div>
+            <div className="text-2xl font-bold mt-1">{totalAds.toLocaleString()}</div>
+            <div className="text-xs text-white/40">Today: <b className="text-white">{dailyAds}</b> • Zone e6q6hxg91y</div>
+            <div className="text-[11px] text-white/30 mt-1">Each page view where aclib runs = 1 impression.</div>
+          </div>
+        </div>
+        <div className="flex gap-2 mt-4">
+          <button onClick={clearAnalytics} className="btn-ghost text-xs">Clear counts (admin only)</button>
+          <span className="text-xs text-white/30 py-2">Anonymous — no user email/IP stored, only counts.</span>
+        </div>
+      </div>
+
+      <div className="card p-5">
+        <h4 className="font-semibold text-sm">Recent Downloads (last 10 — anonymous)</h4>
+        {recent.length===0 ? <p className="text-xs text-white/40 mt-2">No recent downloads yet — download via Download page to see here.</p> : (
+          <ul className="mt-3 space-y-1.5 text-xs">
+            {recent.map((r:any,i:number)=> <li key={i} className="flex gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2"><span className="text-white/80 truncate flex-1">{r.title}</span><span className="text-white/30 text-[11px]">{new Date(r.date).toLocaleString()}</span></li>)}
+          </ul>
+        )}
+      </div>
+
+      <div className="card p-5 bg-amber-500/5 border-amber-500/20">
+        <h4 className="font-semibold text-sm flex items-center gap-2"><Megaphone className="w-4 h-4 text-amber-400"/> AdCash count kivabe hoy?</h4>
+        <p className="text-xs text-white/60 mt-1">Proti page view e <code className="bg-white/10 px-1 rounded">aclib.runAutoTag({`{zoneId:'e6q6hxg91y'}`})</code> run hoy — tokhon <code>trackAdImpression()</code> call hoye `analytics/ads` barbe. Ad blocker thakle count kom dekhabe — seta normal.</p>
+      </div>
     </div>
   )
 }

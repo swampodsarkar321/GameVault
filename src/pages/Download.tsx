@@ -4,6 +4,7 @@ import { ShieldCheck, Download, ArrowLeft, FolderOpen, Zap, ExternalLink, Loader
 import { fetchGameById, fetchSoftwareById } from "../firebase/firestore"
 import { setPageMeta } from "../utils/seo"
 import { useDownloads } from "../context/DownloadManagerContext"
+import { trackDownload } from "../utils/analytics"
 
 export default function DownloadPage(){
   const { id } = useParams()
@@ -34,7 +35,8 @@ export default function DownloadPage(){
   const handleFastDownload = async () => {
     setError(null)
     if (!mirror?.url) { setError("No download URL configured. Add real freeware mirror in Firebase (see realFreewareSeed.ts)."); return }
-    // Register in Download Manager (user dekhte parbe)
+    // Anonymous global count for Admin Analytics + local Download Manager
+    trackDownload(item.id || id, item.title)
     const dlId = addDownload({ title: item.title, filename, size: item.size || mirror.size || "—", url: mirror.url, cover: item.coverImage || item.logo })
     setActiveId(dlId)
     updateProgress(dlId, 0, "downloading")

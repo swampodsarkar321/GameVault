@@ -23,6 +23,10 @@
     "settings": {
       ".read": true,
       ".write": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true"
+    },
+    "analytics": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('isAdmin').val() === true",
+      ".write": true
     }
   }
 }
