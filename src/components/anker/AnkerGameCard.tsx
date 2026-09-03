@@ -40,7 +40,7 @@ export default function AnkerGameCard({ game, rank, total, showRank, variant="gr
         </div>
         <div className="hidden md:flex items-center gap-2 shrink-0">
           <Link to={`/game/${game.slug}`} className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10"><Eye className="w-4 h-4"/></Link>
-          <Link to={`/game/${game.slug}`} className="px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold flex items-center gap-1.5"><Download className="w-4 h-4"/>Download</Link>
+          <Link to={`/download/${game.id}`} className="px-4 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold flex items-center gap-1.5"><Download className="w-4 h-4"/>Download</Link>
         </div>
       </div>
     )
@@ -78,7 +78,7 @@ export default function AnkerGameCard({ game, rank, total, showRank, variant="gr
         )}
         <div className="grid grid-cols-2 gap-2 mt-3">
           <Link to={`/game/${game.slug}`} className="py-2 rounded-xl bg-white/[0.06] hover:bg-white/10 border border-white/10 text-center text-sm font-medium">Details</Link>
-          <Link to={`/game/${game.slug}`} className="py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-center text-sm font-semibold flex items-center justify-center gap-1"><Download className="w-3.5 h-3.5"/>Download</Link>
+          <Link to={`/download/${game.id}`} className="py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-center text-sm font-semibold flex items-center justify-center gap-1"><Download className="w-3.5 h-3.5"/>Download</Link>
         </div>
       </div>
     </div>

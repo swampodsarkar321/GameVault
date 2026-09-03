@@ -17,7 +17,10 @@ export default function SoftwareCard({ software }: { software: Software }){
         <button onClick={(e)=>{e.preventDefault(); toggle(software.id,'software')}} className={`self-start w-8 h-8 rounded-full grid place-items-center border ${fav?"bg-pink-500/20 border-pink-500/30 text-pink-400":"bg-white/5 border-white/10 text-white/60"}`}><Heart className={`w-4 h-4 ${fav?"fill-current":""}`} /></button>
       </Link>
       <p className="text-xs text-white/55 line-clamp-2 mt-3 flex-1">{software.shortDescription}</p>
-      <Link to={`/software/${software.slug}`} className="text-xs font-medium text-violet-300 hover:text-white mt-2">View details →</Link>
+      <div className="grid grid-cols-2 gap-2 mt-3">
+        <Link to={`/software/${software.slug}`} className="py-2 rounded-xl bg-white/[0.06] hover:bg-white/10 border border-white/10 text-center text-xs font-medium">Details</Link>
+        <Link to={`/download/${software.id}`} className="py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-center text-xs font-semibold flex items-center justify-center gap-1">Download</Link>
+      </div>
     </div>
   )
 }

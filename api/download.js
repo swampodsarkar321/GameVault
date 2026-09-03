@@ -4,7 +4,7 @@
 
 import * as ftp from "basic-ftp"
 
-export const config = { api: { responseLimit: false } }
+export const config = { api: { responseLimit: false }, maxDuration: 30 }
 
 function isAllowedUrl(u) {
   try {
@@ -96,15 +96,25 @@ export default async function handler(req, res) {
     }
 
     // HTTP/HTTPS proxy with streaming and Range forwarding
+    // For large files (>50MB) avoid Vercel proxy timeout — redirect instead
+    try {
+      const headRes = await fetch(remoteUrl, { method: "HEAD", redirect: "follow" })
+      const cl = headRes.headers.get("content-length")
+      if (cl && Number(cl) > 50 * 1024 * 1024) {
+        // Large file — redirect to direct URL for high-speed without Vercel limit
+        res.setHeader("Location", remoteUrl)
+        return res.status(302).end()
+      }
+    } catch {}
     const headers: Record<string,string> = {}
     if (req.headers.range) headers["Range"] = req.headers.range as string
-    // Forward user-agent
     headers["User-Agent"] = req.headers["user-agent"] as string || "GameVault-Downloader/1.0"
 
     const upstream = await fetch(remoteUrl, { headers, redirect: "follow" })
     if (!upstream.ok && upstream.status !== 206) {
-      const text = await upstream.text().catch(()=> "")
-      return res.status(upstream.status).json({ error: `Upstream ${upstream.status}`, details: text.slice(0,500) })
+      // Fallback: redirect to direct URL instead of server error
+      res.setHeader("Location", remoteUrl)
+      return res.status(302).end()
     }
 
     // Copy relevant headers

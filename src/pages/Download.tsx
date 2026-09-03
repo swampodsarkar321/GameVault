@@ -30,10 +30,10 @@ export default function DownloadPage(){
 
   const handleFastDownload = async () => {
     setError(null)
+    if (!mirror?.url) { setError("No download URL configured. Add real freeware mirror in Firebase (see realFreewareSeed.ts)."); return }
     setDownloading(true)
     setProgress(0)
     try {
-      // Try File System Access API for folder picker
       const hasPicker = typeof (window as any).showSaveFilePicker === "function"
       if (hasPicker) {
         try {
@@ -42,8 +42,14 @@ export default function DownloadPage(){
             types: [{ description: "Game Archive", accept: { "application/octet-stream": [".zip",".rar",".7z",".exe"] } }],
           })
           const writable = await handle.createWritable()
-          const res = await fetch(proxyUrl)
-          if (!res.ok) throw new Error(`Server ${res.status}`)
+          // Try proxy first, fallback to direct if proxy fails (e.g., server error or large file redirect)
+          let res = await fetch(proxyUrl)
+          if (!res.ok) {
+            // Proxy failed (e.g., 502), try direct mirror
+            console.warn("proxy failed", res.status, "fallback to direct")
+            res = await fetch(mirror.url)
+            if (!res.ok) throw new Error(`Direct ${res.status}`)
+          }
           const total = Number(res.headers.get("content-length") || 0)
           const reader = res.body?.getReader()
           if (!reader) throw new Error("No stream")
@@ -63,12 +69,11 @@ export default function DownloadPage(){
           return
         } catch (e:any) {
           if (e?.name === "AbortError") { setDownloading(false); return }
-          // fallback to direct
-          console.warn("picker failed, fallback", e)
+          console.warn("picker failed, fallback to anchor", e)
+          // don't throw yet, go to anchor fallback
         }
       }
-      // Fallback: direct download via proxy with progress + anchor
-      // For large files, just trigger anchor to avoid Vercel limit — still via GameVault proxy
+      // Fallback: anchor via proxy, if proxy returns 302 it will redirect to direct for large files
       const a = document.createElement("a")
       a.href = proxyUrl
       a.download = filename
@@ -76,9 +81,20 @@ export default function DownloadPage(){
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
-      setTimeout(()=> setDownloading(false), 1200)
+      // If proxy still errors, after 1.5s also try direct
+      setTimeout(async ()=>{
+        try {
+          const test = await fetch(proxyUrl, { method: "HEAD" })
+          if (!test.ok) {
+            window.open(mirror.url, "_blank")
+          }
+        } catch {}
+        setDownloading(false)
+      }, 1500)
     } catch (e:any) {
-      setError(e?.message || "Download failed")
+      setError(e?.message || "Download failed — trying direct mirror...")
+      // Final fallback: open direct mirror
+      try { window.open(mirror?.url, "_blank") } catch {}
       setDownloading(false)
     }
   }
