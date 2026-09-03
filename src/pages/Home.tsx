@@ -15,7 +15,7 @@ export default function Home(){
   const [games,setGames]=useState<Game[]>([])
   const [software,setSoftware]=useState<Software[]>([])
   const [loading,setLoading]=useState(true)
-  useEffect(()=>{ setPageMeta("Free PC Games Download | Freeware Vault","GameVault — free PC games download. Steam-style store with curated freeware, open-source & demos. Trending & Top charts, high-speed downloads. 100% legal, verified sources.", { canonical:"/", keywords:"free PC games download, freeware games, open source games, free games download, PC games free, trending free games, top free PC games" }); Promise.all([fetchGames({limitN:20}), fetchSoftware({limitN:8})]).then(([g,s])=>{ setGames(g); setSoftware(s); setLoading(false)}) },[])
+  useEffect(()=>{ setPageMeta("Free PC Games Download | Freeware Vault","GameVault — free PC games download. Curated freeware, open-source & demos. Trending & Top charts, high-speed downloads. 100% legal, verified sources.", { canonical:"/", keywords:"free PC games download, freeware games, open source games, free games download, PC games free, trending free games, top free PC games" }); Promise.all([fetchGames({limitN:20}), fetchSoftware({limitN:8})]).then(([g,s])=>{ setGames(g); setSoftware(s); setLoading(false)}) },[])
   const featured = games.filter(g=>g.featured)
   const popular = games.filter(g=>g.popular)
   const latestSoft = software.slice(0,4)
@@ -31,9 +31,9 @@ export default function Home(){
       {/* Anker-style Trending Board */}
       {loading ? <div className="mt-8"><GridSkeleton count={5}/></div> : <TrendingBoard games={trendingGames.length?trendingGames:games} />}
 
-      {/* Featured - Steam capsule */}
+      {/* Featured */}
       <section className="mt-8">
-        <div className="flex items-end justify-between"><h2 className="font-bold text-xl text-[#C7D5E0]">Featured & Recommended <span className="text-xs font-normal text-[#8F98A0] ml-2">Steam-style vault</span></h2><Link to="/games" className="text-sm text-[#66C0F4] hover:text-white">View all →</Link></div>
+        <div className="flex items-end justify-between"><h2 className="font-bold text-xl text-[#C7D5E0]">Featured & Recommended <span className="text-xs font-normal text-[#8F98A0] ml-2">Curated vault</span></h2><Link to="/games" className="text-sm text-[#66C0F4] hover:text-white">View all →</Link></div>
         {loading? <div className="mt-4"><GridSkeleton count={5}/></div> : <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4">{(featured.length?featured:games.slice(0,5)).map((g,i)=> <AnkerGameCard key={g.id} game={g} rank={i+1} total={5} showRank />)}</div>}
       </section>
       <section className="mt-8">
@@ -53,7 +53,7 @@ export default function Home(){
         {loading? <GridSkeleton count={4}/> : <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">{popularSoft.map(s=> <SoftwareCard key={s.id} software={s}/>)}</div>}
       </section>
       <section className="mt-8 bg-[#1B2838] border border-[#2A475E] rounded p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div><h3 className="font-bold text-lg text-[#C7D5E0]">Get weekly drops</h3><p className="text-sm text-[#8F98A0]">New freeware & open-source picks — no spam. Steam-style weekly chart every 7 days.</p></div>
+        <div><h3 className="font-bold text-lg text-[#C7D5E0]">Get weekly drops</h3><p className="text-sm text-[#8F98A0]">New freeware & open-source picks — no spam. Weekly chart every 7 days.</p></div>
         <form onSubmit={e=>e.preventDefault()} className="flex gap-2 w-full md:w-auto"><input placeholder="you@email.com" className="flex-1 md:w-72 bg-[#0F1922] border border-[#2A475E] rounded px-4 py-2.5 text-sm outline-none text-[#C7D5E0] placeholder:text-[#8F98A0]"/><button className="px-4 py-2.5 rounded bg-[#66C0F4] text-[#171A21] font-bold text-sm">Subscribe</button></form>
       </section>
 
@@ -75,7 +75,7 @@ export default function Home(){
           </div>
           <div className="bg-[#0F1922] border border-[#2A475E] rounded p-4">
             <h3 className="font-semibold text-[#C7D5E0]">Are the games safe to download?</h3>
-            <p className="text-[#8F98A0] mt-1">All links point to verified official sources (developer sites, Itch.io, Steam free demos). Files are not re-hosted as cracked copies.</p>
+            <p className="text-[#8F98A0] mt-1">All links point to verified official sources (developer sites, Itch.io, official free demos). Files are not re-hosted as cracked copies.</p>
           </div>
         </div>
       </section>
