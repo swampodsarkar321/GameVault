@@ -56,6 +56,34 @@ export default function Home(){
         <div><h3 className="font-display font-bold text-lg">Get weekly drops</h3><p className="text-sm text-white/60">New freeware & open-source picks — no spam. Anker-style weekly chart every 7 days.</p></div>
         <form onSubmit={e=>e.preventDefault()} className="flex gap-2 w-full md:w-auto"><input placeholder="you@email.com" className="flex-1 md:w-72 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none"/><button className="btn-primary">Subscribe</button></form>
       </section>
+
+      {/* Visible FAQ - for Enhancements FAQ rich result */}
+      <section className="mt-8 card p-6">
+        <h2 className="font-display font-bold text-lg mb-4">Frequently Asked Questions</h2>
+        <div className="grid md:grid-cols-2 gap-4 text-sm">
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
+            <h3 className="font-semibold text-white">Is GameVault free and legal?</h3>
+            <p className="text-white/60 mt-1">Yes. GameVault only lists freeware, open-source games and demos from verified legal sources. No pirated or cracked content is hosted.</p>
+          </div>
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
+            <h3 className="font-semibold text-white">How often is Trending updated?</h3>
+            <p className="text-white/60 mt-1">Trending is recalculated every 7 days based on actual downloads on GameVault. Top Games ranks by all-time downloads.</p>
+          </div>
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
+            <h3 className="font-semibold text-white">Do I need to register to download?</h3>
+            <p className="text-white/60 mt-1">No. You can browse and find download sources without an account. Favorites and sync require optional login.</p>
+          </div>
+          <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
+            <h3 className="font-semibold text-white">Are the games safe to download?</h3>
+            <p className="text-white/60 mt-1">All links point to verified official sources (developer sites, Itch.io, Steam free demos). Files are not re-hosted as cracked copies.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Breadcrumb visible for UX + SEO */}
+      <nav aria-label="Breadcrumb" className="mt-6 text-xs text-white/30 flex gap-2">
+        <a href="/" className="hover:text-white">Home</a> <span>›</span> <a href="/games" className="hover:text-white">Games</a> <span>›</span> <a href="/trending" className="hover:text-white">Trending</a> <span>›</span> <a href="/top-games" className="hover:text-white">Top Games</a>
+      </nav>
     </div>
   )
 }

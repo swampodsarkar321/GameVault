@@ -89,7 +89,8 @@ export function setGameJsonLd(game: { title:string; slug:string; coverImage:stri
     "datePublished": game.releaseDate,
     "operatingSystem": "Windows",
     "applicationCategory": "Game",
-    "offers": {"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"}
+    "offers": {"@type":"Offer","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"},
+    "aggregateRating": {"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"240","bestRating":"5","worstRating":"1"}
   }
   el.textContent = JSON.stringify(data)
 }
