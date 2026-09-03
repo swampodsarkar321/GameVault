@@ -1,7 +1,7 @@
 {
-  "name": "GameVault – Free PC Games Vault",
-  "short_name": "GameVault",
-  "description": "Free PC games download — curated freeware, open-source & demos. AnkerGames-inspired vault, 100% legal.",
+  "name": "AnkerPlay – Free PC Games Vault",
+  "short_name": "AnkerPlay",
+  "description": "Free PC games download — curated freeware, open-source & demos. AnkerPlay vault, 100% legal.",
   "icons": [
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
     { "src": "/icons.svg", "sizes": "192x192", "type": "image/svg+xml" }

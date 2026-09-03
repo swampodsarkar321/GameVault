@@ -17,7 +17,7 @@ export default function Games(){
   const [sort,setSort]=useState("newest")
   const [page,setPage]=useState(1)
   const pageSize=10
-  useEffect(()=>{ setPageMeta("Free PC Games Download – Browse Freeware Games","Browse 1,200+ free PC games — freeware, open-source & demos. Filter by genre, platform. Download verified legal PC games on GameVault.", { canonical:"/games", keywords:"free PC games download, freeware games download, open source games download, PC games free"}); fetchGames().then(g=>{ setGames(g); setLoading(false)}) },[])
+  useEffect(()=>{ setPageMeta("Free PC Games Download – Browse Freeware Games","Browse 1,200+ free PC games — freeware, open-source & demos. Filter by genre, platform. Download verified legal PC games on AnkerPlay.", { canonical:"/games", keywords:"free PC games download, freeware games download, open source games download, PC games free"}); fetchGames().then(g=>{ setGames(g); setLoading(false)}) },[])
   const filtered = useMemo(()=>{
     let out=[...games]
     if(genre) out=out.filter(g=>g.genre.includes(genre))

@@ -1,4 +1,4 @@
-const SITE_URL = "https://gamevault-kappa-six.vercel.app"
+const SITE_URL = "https://ankerplay.vercel.app"
 
 type SeoOpts = {
   canonical?: string
@@ -9,7 +9,7 @@ type SeoOpts = {
 }
 
 export function setPageMeta(title: string, description?: string, opts: SeoOpts = {}){
-  const fullTitle = title.includes("GameVault") ? title : `${title} — GameVault`
+  const fullTitle = title.includes("AnkerPlay") ? title : `${title} — AnkerPlay`
   document.title = fullTitle
 
   if(description){

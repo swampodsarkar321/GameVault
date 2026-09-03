@@ -18,7 +18,7 @@ export default function DownloadPage(){
     if(!id) return
     Promise.all([fetchGameById(id), fetchSoftwareById(id)]).then(([g,s])=>{
       const found = g ?? s
-      setItem(found); if(found) setPageMeta(`Download ${found.title} — High-Speed via GameVault`, `${found.title} free download via GameVault — high-speed direct. Choose folder before download. Version ${found.version}, ${found.size}.`); setLoading(false)
+      setItem(found); if(found) setPageMeta(`Download ${found.title} — High-Speed via AnkerPlay`, `${found.title} free download via AnkerPlay — high-speed direct. Choose folder before download. Version ${found.version}, ${found.size}.`); setLoading(false)
     })
   },[id])
   if(loading) return <div className="py-10"><div className="h-64 skeleton rounded-2xl"/></div>
@@ -26,14 +26,14 @@ export default function DownloadPage(){
   const mirror = item.downloads?.[mirrorIndex] || item.downloads?.[0]
   const displayProvider = (()=>{ const p=(mirror?.provider||"").toString(); return p.toLowerCase().includes("fs") ? "Direct" : p })()
   const displayName = (()=>{ const n=(mirror?.name||"").toString(); return n.toLowerCase().includes("fs plus") ? "Primary — Direct" : n })()
-  // Auto GameVault tag for all download file names
+  // Auto AnkerPlay tag for all download file names
   const getExt = (url:string)=>{
     try { const p = new URL(url).pathname; const m = p.match(/\.([a-z0-9]+)$/i); if(m) return m[1].toLowerCase(); } catch {}
     const m2 = (url||"").match(/\.([a-z0-9]+)(\?|$)/i); return m2? m2[1].toLowerCase() : "zip"
   }
   const ext = getExt(mirror?.url || "")
   const safeExt = ["zip","rar","7z","exe","tar","gz"].includes(ext) ? ext : "zip"
-  const baseName = `GameVault_${item.title.replace(/[^a-z0-9]+/gi,"_").replace(/^_+|_+$/g,"")}_v${(item.version || "1.0").replace(/[^a-z0-9.-]/gi,"_")}`
+  const baseName = `AnkerPlay_${item.title.replace(/[^a-z0-9]+/gi,"_").replace(/^_+|_+$/g,"")}_v${(item.version || "1.0").replace(/[^a-z0-9.-]/gi,"_")}`
   const filename = `${baseName}.${safeExt}`
   const proxyUrl = `/api/download?url=${encodeURIComponent(mirror?.url || "")}&filename=${encodeURIComponent(filename)}`
 
@@ -111,8 +111,8 @@ export default function DownloadPage(){
     <div className="py-6 max-w-2xl mx-auto">
       <Link to={item.genre? `/game/${item.slug}`: `/software/${item.slug}`} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white"><ArrowLeft className="w-4 h-4"/> Back to details</Link>
       <div className="card p-6 mt-4">
-        <h1 className="font-display font-bold text-xl flex items-center gap-2"><Zap className="w-6 h-6 text-violet-400"/> High-Speed Download via GameVault</h1>
-        <p className="text-xs text-white/40 mt-1">Real download — only from GameVault download page. Choose folder before download.</p>
+        <h1 className="font-display font-bold text-xl flex items-center gap-2"><Zap className="w-6 h-6 text-violet-400"/> High-Speed Download via AnkerPlay</h1>
+        <p className="text-xs text-white/40 mt-1">Real download — only from AnkerPlay download page. Choose folder before download.</p>
         <div className="mt-4 bg-white/[0.04] border border-white/10 rounded-xl p-4">
           <div className="text-sm font-semibold">{item.title}</div>
           <div className="text-xs text-white/50 mt-1">Version {item.version} • {item.size} • {displayProvider} • <span className="text-emerald-300 font-bold">High-Speed</span></div>
@@ -131,12 +131,12 @@ export default function DownloadPage(){
           <a href={proxyUrl} className="btn-ghost justify-center text-sm"><Download className="w-4 h-4"/> Direct (proxy)</a>
           <a href={mirror?.url} target="_blank" rel="noopener noreferrer" className="btn-ghost justify-center text-sm">External mirror <ExternalLink className="w-3 h-3"/></a>
         </div>
-        <p className="text-[11px] text-center text-white/30 mt-2">Via GameVault proxy — you will be asked to <b className="text-white/50">Choose folder</b> before download. Speed depends on your FTP/CDN bandwidth.</p>
+        <p className="text-[11px] text-center text-white/30 mt-2">Via AnkerPlay proxy — you will be asked to <b className="text-white/50">Choose folder</b> before download. Speed depends on your FTP/CDN bandwidth.</p>
 
         <div className="flex items-start gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 mt-4 text-xs text-emerald-200">
           <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5"/><span><b>Safety note:</b> Only download from verified mirrors. Scan downloads with antivirus.</span>
         </div>
-        <div className="text-xs text-white/40 mt-3">Legal: GameVault only indexes legally distributable content. FTP files stream via GameVault for high-speed.</div>
+        <div className="text-xs text-white/40 mt-3">Legal: AnkerPlay only indexes legally distributable content. FTP files stream via AnkerPlay for high-speed.</div>
       </div>
     </div>
   )

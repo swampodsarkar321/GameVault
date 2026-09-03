@@ -21,7 +21,7 @@ export default function Hero(){
       <div className="relative grid lg:grid-cols-[1.15fr_0.85fr] gap-8 items-center">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-full px-3 py-1"><Sparkles className="w-3.5 h-3.5"/> ANKER VAULT • VERIFIED • FREEWARE ONLY</div>
-          <h1 className="font-display font-bold text-[30px] md:text-[46px] leading-[0.95] mt-4 text-white">GameVault<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-300">Discover. Explore. Download.</span></h1>
+          <h1 className="font-display font-bold text-[30px] md:text-[46px] leading-[0.95] mt-4 text-white">AnkerPlay<br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-300">Discover. Explore. Download.</span></h1>
           <p className="text-white/60 mt-3 max-w-xl leading-relaxed text-sm md:text-[15px]">AnkerGames A-Z vault — curated freeware & open-source, fast verified sources. No pirated content. Trending 7-day chart + Top all-time.</p>
           <form onSubmit={onSearch} className="mt-6 flex items-center gap-2 bg-white/[0.07] border border-white/10 rounded-2xl p-2 max-w-xl focus-within:border-violet-500/50 focus-within:bg-white/[0.09] transition">
             <div className="pl-3"><Search className="w-5 h-5 text-white/40"/></div>

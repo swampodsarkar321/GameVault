@@ -16,8 +16,8 @@ export default function Navbar(){
     <header className="sticky top-0 z-50 bg-[#070A12]/80 backdrop-blur-xl border-b border-white/[0.06]">
       <div className="max-w-[1280px] mx-auto px-4 h-[64px] flex items-center gap-6">
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <img src="/favicon.svg" alt="GameVault" width="36" height="36" className="w-9 h-9 rounded-xl shadow" />
-          <span className="font-display font-bold text-lg hidden sm:block">GameVault</span>
+          <img src="/favicon.svg" alt="AnkerPlay" width="36" height="36" className="w-9 h-9 rounded-xl shadow" />
+          <span className="font-display font-bold text-lg hidden sm:block">AnkerPlay</span>
           <span className="hidden lg:inline text-xs px-2 py-1 rounded-full bg-white/10 border border-white/10 ml-1">BETA</span>
         </Link>
         <nav className="hidden md:flex items-center gap-1 text-sm font-medium">

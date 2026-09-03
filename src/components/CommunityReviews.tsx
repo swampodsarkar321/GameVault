@@ -1,7 +1,7 @@
 import { Star } from "lucide-react"
 
 const reviews = [
-  { name:"Aarav S.", role:"Strategy fan", text:"GameVault e 0 A.D. peye gelam — direct link, no ads trap. Trending chart e ja dekhay tai sotti.", rating:5 },
+  { name:"Aarav S.", role:"Strategy fan", text:"AnkerPlay e 0 A.D. peye gelam — direct link, no ads trap. Trending chart e ja dekhay tai sotti.", rating:5 },
   { name:"Mim R.", role:"Indie collector", text:"SuperTuxKart hover te trailer auto-play ta joss — Anker er cheye better lagche.", rating:5 },
   { name:"Jahid K.", role:"Low-end PC", text:"OpenTTD 28MB — amar puran laptop e cholche, download manager e progress dekhte parchi.", rating:4 },
   { name:"Sadia T.", role:"Open-source dev", text:"Luanti mods gulo verified source e — safe feel hoy. Recent ticker e live dekhte valo lage.", rating:5 },

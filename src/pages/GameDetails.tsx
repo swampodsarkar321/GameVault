@@ -25,7 +25,7 @@ export default function GameDetails(){
     fetchGameBySlug(slug).then(g=>{
       setGame(g)
       if(g){
-        setPageMeta(`${g.title} – Free Download`, `${g.shortDescription} Download free – ${g.title} freeware PC game. Size ${g.size}, version ${g.version}. Verified legal source on GameVault.`, { canonical:`/game/${g.slug}`, keywords:`${g.title} free download, ${g.title} free PC game, download ${g.title} freeware`, image: g.coverImage })
+        setPageMeta(`${g.title} – Free Download`, `${g.shortDescription} Download free – ${g.title} freeware PC game. Size ${g.size}, version ${g.version}. Verified legal source on AnkerPlay.`, { canonical:`/game/${g.slug}`, keywords:`${g.title} free download, ${g.title} free PC game, download ${g.title} freeware`, image: g.coverImage })
         setGameJsonLd({ title: g.title, slug: g.slug, coverImage: g.coverImage, description: g.description || g.shortDescription, genre: Array.isArray(g.genre)? g.genre : [String(g.genre)], developer: g.developer, publisher: g.publisher, releaseDate: g.releaseDate })
       }
       setLoading(false)

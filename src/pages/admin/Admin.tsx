@@ -74,12 +74,12 @@ export default function Admin(){
     try{
       const defaults = {
         shortDescription: data.shortDescription || `${data.title} — freeware game`,
-        description: data.description || `${data.title} is a freeware game available on GameVault.`,
+        description: data.description || `${data.title} is a freeware game available on AnkerPlay.`,
         platform: data.platform || ["Windows 10","Windows 11"],
         releaseDate: data.releaseDate || new Date().toISOString().slice(0,10),
         version: data.version || "1.0.0",
-        developer: data.developer || "GameVault",
-        publisher: data.publisher || "GameVault",
+        developer: data.developer || "AnkerPlay",
+        publisher: data.publisher || "AnkerPlay",
         screenshots: data.screenshots || (data.coverImage ? [data.coverImage] : []),
       }
       const payload = { ...defaults, ...data }
@@ -93,7 +93,7 @@ export default function Admin(){
           payload.downloads = urls.map((url:string, i:number) => ({
             name: i===0 ? "Primary — Direct" : `Mirror ${i+1}`,
             url,
-            provider: i===0 ? "GameVault CDN" : "Archive.org",
+            provider: i===0 ? "AnkerPlay CDN" : "Archive.org",
             size: payload.size,
             type: i===0 ? "direct" : "mirror",
           }))
@@ -106,7 +106,7 @@ export default function Admin(){
         push("Game updated","success")
       } else {
         if(isRealtimeConfigured) await createGame(payload)
-        const newItem = { id: `g${Date.now()}`, ...payload, downloads: payload.downloads || [{name:"Primary — Direct",url:"https://example.com/download/game.zip",provider:"GameVault CDN",size:payload.size}], requirements: payload.requirements || { minimum:{os:"Windows 10 64-bit",cpu:"Intel Core i5-8400",ram:"8 GB RAM",gpu:"GTX 1060 6GB",storage:"30 GB"}, recommended:{os:"Windows 11 64-bit",cpu:"Intel Core i7-10700",ram:"16 GB RAM",gpu:"RTX 3060",storage:"30 GB SSD"} }, createdAt: Date.now() }
+        const newItem = { id: `g${Date.now()}`, ...payload, downloads: payload.downloads || [{name:"Primary — Direct",url:"https://example.com/download/game.zip",provider:"AnkerPlay CDN",size:payload.size}], requirements: payload.requirements || { minimum:{os:"Windows 10 64-bit",cpu:"Intel Core i5-8400",ram:"8 GB RAM",gpu:"GTX 1060 6GB",storage:"30 GB"}, recommended:{os:"Windows 11 64-bit",cpu:"Intel Core i7-10700",ram:"16 GB RAM",gpu:"RTX 3060",storage:"30 GB SSD"} }, createdAt: Date.now() }
         setGames(g=> [newItem, ...g]); push("Game created","success")
       }
       setShowGameModal(false); setEditingGame(null)
@@ -119,7 +119,7 @@ export default function Admin(){
         setSoftware(s=> s.map(x=> x.id===editingSoft.id? {...x, ...data}:x)); push("Software updated","success")
       } else {
         if(isRealtimeConfigured) await createSoftware(data)
-        const newItem = { id: `s${Date.now()}`, ...data, screenshots: data.screenshots?.split(',').map((s:string)=>s.trim()).filter(Boolean) || [], features: typeof data.features==='string'? data.features.split(',').map((s:string)=>s.trim()): data.features, platform: typeof data.platform==='string'? data.platform.split(',').map((s:string)=>s.trim()): data.platform, downloads:[{name:"Primary Mirror",url:"https://example.com",provider:"GameVault",size:data.size}] }
+        const newItem = { id: `s${Date.now()}`, ...data, screenshots: data.screenshots?.split(',').map((s:string)=>s.trim()).filter(Boolean) || [], features: typeof data.features==='string'? data.features.split(',').map((s:string)=>s.trim()): data.features, platform: typeof data.platform==='string'? data.platform.split(',').map((s:string)=>s.trim()): data.platform, downloads:[{name:"Primary Mirror",url:"https://example.com",provider:"AnkerPlay",size:data.size}] }
         setSoftware(s=> [newItem, ...s]); push("Software created","success")
       }
       setShowSoftModal(false); setEditingSoft(null)
@@ -152,7 +152,7 @@ export default function Admin(){
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded bg-gradient-to-br from-[#66C0F4] to-[#1B2838] grid place-items-center"><Shield className="w-4 h-4 text-white"/></div>
             <div>
-              <div className="font-bold text-sm leading-none text-[#C7D5E0]">GameVault <span className="text-[#66C0F4]">Dev</span></div>
+              <div className="font-bold text-sm leading-none text-[#C7D5E0]">AnkerPlay <span className="text-[#66C0F4]">Dev</span></div>
               <div className="text-[11px] text-[#8F98A0]">Steamworks-style Dashboard</div>
             </div>
           </div>
@@ -309,7 +309,7 @@ export default function Admin(){
                     <thead className="text-[#8F98A0] text-xs bg-[#0F1922]"><tr><th className="text-left py-2 px-2">Email</th><th className="text-left">UID</th><th className="text-left">Admin</th><th className="text-left">Created</th></tr></thead>
                     <tbody>
                       <tr className="border-t border-[#2A475E]/30"><td className="py-2.5 px-2 text-[#C7D5E0]">{user.email}</td><td className="text-[#8F98A0] text-xs">{user.uid.slice(0,12)}…</td><td>{isAdmin? <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-xs">Yes</span>:"No"}</td><td className="text-[#8F98A0]">—</td></tr>
-                      <tr className="border-t border-[#2A475E]/30"><td className="py-2.5 px-2 text-[#C7D5E0]">demo@GameVault.local</td><td className="text-[#8F98A0] text-xs">demo-uid…</td><td>No</td><td className="text-[#8F98A0]">2024-12-01</td></tr>
+                      <tr className="border-t border-[#2A475E]/30"><td className="py-2.5 px-2 text-[#C7D5E0]">demo@AnkerPlay.local</td><td className="text-[#8F98A0] text-xs">demo-uid…</td><td>No</td><td className="text-[#8F98A0]">2024-12-01</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -324,8 +324,8 @@ export default function Admin(){
               <div className="bg-[#1B2838] border border-[#2A475E] rounded p-6">
                 <h3 className="font-semibold text-[#C7D5E0]">Site Settings</h3>
                 <div className="grid gap-3 mt-4 max-w-lg">
-                  <label className="text-sm"><span className="text-[#8F98A0] text-xs">Site name</span><input defaultValue="GameVault" className="w-full mt-1 bg-[#0F1922] border border-[#2A475E] rounded px-3 py-2.5 outline-none text-[#C7D5E0]"/></label>
-                  <label className="text-sm"><span className="text-[#8F98A0] text-xs">Support email</span><input defaultValue="support@GameVault.local" className="w-full mt-1 bg-[#0F1922] border border-[#2A475E] rounded px-3 py-2.5 outline-none text-[#C7D5E0]"/></label>
+                  <label className="text-sm"><span className="text-[#8F98A0] text-xs">Site name</span><input defaultValue="AnkerPlay" className="w-full mt-1 bg-[#0F1922] border border-[#2A475E] rounded px-3 py-2.5 outline-none text-[#C7D5E0]"/></label>
+                  <label className="text-sm"><span className="text-[#8F98A0] text-xs">Support email</span><input defaultValue="support@AnkerPlay.local" className="w-full mt-1 bg-[#0F1922] border border-[#2A475E] rounded px-3 py-2.5 outline-none text-[#C7D5E0]"/></label>
                   <button onClick={()=>push("Settings saved (demo)","success")} className="px-4 py-2 rounded bg-[#66C0F4] text-[#171A21] font-bold w-fit">Save settings</button>
                 </div>
               </div>

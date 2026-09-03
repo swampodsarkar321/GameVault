@@ -17,7 +17,7 @@ export default function Home(){
   const [games,setGames]=useState<Game[]>([])
   const [software,setSoftware]=useState<Software[]>([])
   const [loading,setLoading]=useState(true)
-  useEffect(()=>{ setPageMeta("Free PC Games Download | Freeware Vault","GameVault — free PC games download. AnkerGames A-Z vault with curated freeware, open-source & demos. Trending & Top charts, high-speed downloads. 100% legal.", { canonical:"/", keywords:"free PC games download, freeware games, open source games, free games download, PC games free, trending free games, top free PC games" }); Promise.all([fetchGames({limitN:20}), fetchSoftware({limitN:8})]).then(([g,s])=>{ setGames(g); setSoftware(s); setLoading(false)}) },[])
+  useEffect(()=>{ setPageMeta("Free PC Games Download | Freeware Vault","AnkerPlay — free PC games download. AnkerGames A-Z vault with curated freeware, open-source & demos. Trending & Top charts, high-speed downloads. 100% legal.", { canonical:"/", keywords:"free PC games download, freeware games, open source games, free games download, PC games free, trending free games, top free PC games" }); Promise.all([fetchGames({limitN:20}), fetchSoftware({limitN:8})]).then(([g,s])=>{ setGames(g); setSoftware(s); setLoading(false)}) },[])
   const featured = games.filter(g=>g.featured)
   const popular = games.filter(g=>g.popular)
   const latestSoft = software.slice(0,4)
@@ -71,13 +71,13 @@ export default function Home(){
         <h2 className="font-display font-bold text-xl text-white">From the Vault — Guides</h2>
         <div className="grid md:grid-cols-3 gap-4 mt-4">
           <Link to="/blog/best-free-pc-games-2026" className="bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 rounded-2xl p-4 block">
-            <div className="text-xs text-violet-300">Guide • 7 min</div><div className="font-semibold text-white mt-1">Best Free PC Games 2026</div><div className="text-xs text-white/50 mt-1">Top freeware games download on GameVault — 0 A.D., OpenTTD...</div>
+            <div className="text-xs text-violet-300">Guide • 7 min</div><div className="font-semibold text-white mt-1">Best Free PC Games 2026</div><div className="text-xs text-white/50 mt-1">Top freeware games download on AnkerPlay — 0 A.D., OpenTTD...</div>
           </Link>
           <Link to="/blog/free-open-source-games" className="bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 rounded-2xl p-4 block">
             <div className="text-xs text-emerald-300">Open Source • 5 min</div><div className="font-semibold text-white mt-1">Free Open Source Games</div><div className="text-xs text-white/50 mt-1">Unciv, Wesnoth, Xonotic — legal open source PC games</div>
           </Link>
           <Link to="/blog/how-to-download-free-games" className="bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 rounded-2xl p-4 block">
-            <div className="text-xs text-cyan-300">How-to • 5 min</div><div className="font-semibold text-white mt-1">How to Download Legally</div><div className="text-xs text-white/50 mt-1">Choose Folder, high-speed via GameVault, 100% legal</div>
+            <div className="text-xs text-cyan-300">How-to • 5 min</div><div className="font-semibold text-white mt-1">How to Download Legally</div><div className="text-xs text-white/50 mt-1">Choose Folder, high-speed via AnkerPlay, 100% legal</div>
           </Link>
         </div>
       </section>
@@ -87,12 +87,12 @@ export default function Home(){
         <h2 className="font-display font-bold text-lg mb-4">Frequently Asked Questions</h2>
         <div className="grid md:grid-cols-2 gap-4 text-sm">
           <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
-            <h3 className="font-semibold text-white">Is GameVault free and legal?</h3>
-            <p className="text-white/60 mt-1">Yes. GameVault only lists freeware, open-source games and demos from verified legal sources. No pirated or cracked content is hosted.</p>
+            <h3 className="font-semibold text-white">Is AnkerPlay free and legal?</h3>
+            <p className="text-white/60 mt-1">Yes. AnkerPlay only lists freeware, open-source games and demos from verified legal sources. No pirated or cracked content is hosted.</p>
           </div>
           <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
             <h3 className="font-semibold text-white">How often is Trending updated?</h3>
-            <p className="text-white/60 mt-1">Trending is recalculated every 7 days based on actual downloads on GameVault. Top Games ranks by all-time downloads.</p>
+            <p className="text-white/60 mt-1">Trending is recalculated every 7 days based on actual downloads on AnkerPlay. Top Games ranks by all-time downloads.</p>
           </div>
           <div className="bg-white/[0.03] border border-white/5 rounded-xl p-4">
             <h3 className="font-semibold text-white">Do I need to register to download?</h3>

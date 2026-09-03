@@ -11,7 +11,7 @@ export default function Trending(){
   const [games,setGames]=useState<Game[]>([])
   const [loading,setLoading]=useState(true)
   useEffect(()=>{
-    setPageMeta("Trending Games – Last 7 Days Most Downloaded Free PC Games","Trending free PC games ranked by actual downloads in the last 7 days. AnkerGames-style chart for GameVault — 100% legal freeware & open-source.", { canonical:"/trending", keywords:"trending games, most downloaded games last 7 days, popular free PC games, trending freeware games"})
+    setPageMeta("Trending Games – Last 7 Days Most Downloaded Free PC Games","Trending free PC games ranked by actual downloads in the last 7 days. AnkerGames-style chart for AnkerPlay — 100% legal freeware & open-source.", { canonical:"/trending", keywords:"trending games, most downloaded games last 7 days, popular free PC games, trending freeware games"})
     fetchGames({limitN:20}).then(g=>{
       // shuffle to simulate weekly trending
       const shuffled=[...g].sort(()=>0.5-Math.random())

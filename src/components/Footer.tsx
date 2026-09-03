@@ -5,7 +5,7 @@ export default function Footer(){
     <footer className="border-t border-white/[0.06] bg-[#0A0E1E] mt-12">
       <div className="max-w-[1280px] mx-auto px-4 py-10 grid md:grid-cols-4 gap-8">
         <div>
-          <div className="flex items-center gap-2 font-display font-bold text-lg"><img src="/favicon.svg" alt="GameVault" width="32" height="32" className="w-8 h-8 rounded-lg" />GameVault</div>
+          <div className="flex items-center gap-2 font-display font-bold text-lg"><img src="/favicon.svg" alt="AnkerPlay" width="32" height="32" className="w-8 h-8 rounded-lg" />AnkerPlay</div>
           <p className="text-sm text-white/50 mt-3 leading-relaxed">Curated freeware, open-source games & software. Only legally distributable content. Fast, safe, and beautifully organized.</p>
           <div className="flex gap-2 mt-4">
             <a href="#" className="w-9 h-9 rounded-xl bg-white/5 grid place-items-center hover:bg-white/10"><Globe className="w-4 h-4"/></a>
@@ -41,7 +41,7 @@ export default function Footer(){
           </form>
         </div>
       </div>
-      <div className="border-t border-white/5 py-4 text-center text-xs text-white/40">© {new Date().getFullYear()} GameVault — Only freeware & open-source. No pirated content.</div>
+      <div className="border-t border-white/5 py-4 text-center text-xs text-white/40">© {new Date().getFullYear()} AnkerPlay — Only freeware & open-source. No pirated content.</div>
     </footer>
   )
 }

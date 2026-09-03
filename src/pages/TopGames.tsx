@@ -12,7 +12,7 @@ export default function TopGames(){
   const [games,setGames]=useState<Game[]>([])
   const [loading,setLoading]=useState(true)
   useEffect(()=>{
-    setPageMeta("Top Games – Most Downloaded Free PC Games All-Time","Top free PC games ranked by all-time downloads. Discover the most popular freeware & open-source PC games on GameVault — Anker-style podium & chart.", { canonical:"/top-games", keywords:"top games, most downloaded games, best free PC games, popular freeware games, top free PC games download"})
+    setPageMeta("Top Games – Most Downloaded Free PC Games All-Time","Top free PC games ranked by all-time downloads. Discover the most popular freeware & open-source PC games on AnkerPlay — Anker-style podium & chart.", { canonical:"/top-games", keywords:"top games, most downloaded games, best free PC games, popular freeware games, top free PC games download"})
     fetchGames({limitN:30}).then(g=>{
       const sorted=[...g].sort((a,b)=> Number(b.popular)-Number(a.popular) || a.title.localeCompare(b.title))
       setGames(sorted)

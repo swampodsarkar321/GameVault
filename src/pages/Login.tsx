@@ -27,7 +27,7 @@ export default function Login(){
     <div className="py-10 max-w-md mx-auto">
       <div className="card p-6">
         <h1 className="font-display font-bold text-2xl">{mode==="login"?"Welcome back":"Create account"}</h1>
-        <p className="text-sm text-white/50 mt-1">{mode==="login"?"Login to manage favorites and downloads.":"Join GameVault — free & fast."}</p>
+        <p className="text-sm text-white/50 mt-1">{mode==="login"?"Login to manage favorites and downloads.":"Join AnkerPlay — free & fast."}</p>
         <div className="flex gap-2 mt-4">
           <button onClick={()=>setMode('login')} className={`flex-1 py-2 rounded-xl text-sm font-medium border ${mode==='login'?"bg-violet-600 border-violet-500 text-white":"bg-white/5 border-white/10"}`}>Login</button>
           <button onClick={()=>setMode('register')} className={`flex-1 py-2 rounded-xl text-sm font-medium border ${mode==='register'?"bg-violet-600 border-violet-500 text-white":"bg-white/5 border-white/10"}`}>Register</button>
