@@ -22,6 +22,8 @@ export default function Navbar(){
         </Link>
         <nav className="hidden md:flex items-center gap-1 text-sm font-medium">
           <Link to="/" className="px-3 py-2 rounded-lg hover:bg-white/10">Home</Link>
+          <Link to="/trending" className="px-3 py-2 rounded-lg hover:bg-white/10 text-white/80 hover:text-white">Trending</Link>
+          <Link to="/top-games" className="px-3 py-2 rounded-lg hover:bg-white/10 text-white/80 hover:text-white">Top Games</Link>
           <Link to="/games" className="px-3 py-2 rounded-lg hover:bg-white/10">Games</Link>
           <Link to="/software" className="px-3 py-2 rounded-lg hover:bg-white/10">Software</Link>
         </nav>
@@ -52,6 +54,8 @@ export default function Navbar(){
           </form>
           <div className="grid grid-cols-2 gap-2 text-sm">
             <Link to="/" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5 flex items-center gap-2"><Gamepad2 className="w-4 h-4"/>Home</Link>
+            <Link to="/trending" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5">Trending</Link>
+            <Link to="/top-games" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5">Top Games</Link>
             <Link to="/games" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5">Games</Link>
             <Link to="/software" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5">Software</Link>
             <Link to="/favorites" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5 flex items-center gap-2"><Heart className="w-4 h-4"/>Favorites ({count})</Link>

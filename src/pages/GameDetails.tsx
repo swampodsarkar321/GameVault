@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { HardDrive, Tag, Calendar, ArrowLeft } from "lucide-react"
 import { fetchGameBySlug } from "../firebase/firestore"
 import DownloadMirror from "../components/DownloadMirror"
-import { setPageMeta } from "../utils/seo"
+import { setPageMeta, setGameJsonLd, clearGameJsonLd } from "../utils/seo"
 import type { Game } from "../types"
 
 function arr(v:any):string[]{ if(!v) return []; if(Array.isArray(v)) return v; if(typeof v==="string") return [v]; return Object.values(v) as string[] }
@@ -24,9 +24,13 @@ export default function GameDetails(){
     setLoading(true)
     fetchGameBySlug(slug).then(g=>{
       setGame(g)
-      if(g) setPageMeta(g.title, g.shortDescription)
+      if(g){
+        setPageMeta(`${g.title} – Free Download`, `${g.shortDescription} Download free – ${g.title} freeware PC game. Size ${g.size}, version ${g.version}. Verified legal source on GameVault.`, { canonical:`/game/${g.slug}`, keywords:`${g.title} free download, ${g.title} free PC game, download ${g.title} freeware`, image: g.coverImage })
+        setGameJsonLd({ title: g.title, slug: g.slug, coverImage: g.coverImage, description: g.description || g.shortDescription, genre: Array.isArray(g.genre)? g.genre : [String(g.genre)], developer: g.developer, publisher: g.publisher, releaseDate: g.releaseDate })
+      }
       setLoading(false)
     })
+    return ()=> clearGameJsonLd()
   },[slug])
   if(loading) return <div className="py-10"><div className="h-[360px] skeleton rounded-2xl"/><div className="h-20 skeleton mt-4 rounded-xl"/></div>
   if(!game) return <div className="py-16 text-center card p-10"><h2 className="font-display font-bold text-xl">Game not found</h2><p className="text-white/50 mt-2">The game you’re looking for doesn’t exist.</p><Link to="/games" className="btn-primary mt-4">Browse Games</Link></div>

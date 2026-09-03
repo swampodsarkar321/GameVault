@@ -15,7 +15,7 @@ export default function Software(){
   const [sort,setSort]=useState("newest")
   const [page,setPage]=useState(1)
   const pageSize=12
-  useEffect(()=>{ setPageMeta("Software","Browse freeware software"); fetchSoftware().then(s=>{ setList(s); setLoading(false)}) },[])
+  useEffect(()=>{ setPageMeta("Free Software Download – Freeware & Open-Source Tools","Browse free software download — freeware & open-source tools for Windows. Audacity, GIMP, Blender & more on GameVault.", { canonical:"/software", keywords:"free software download, freeware tools, open source software download, free PC software"}); fetchSoftware().then(s=>{ setList(s); setLoading(false)}) },[])
   const filtered = useMemo(()=>{
     let out=[...list]
     if(cat) out=out.filter(s=>s.category===cat)

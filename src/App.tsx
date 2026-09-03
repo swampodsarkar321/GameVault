@@ -13,6 +13,8 @@ import DownloadPage from "./pages/Download"
 import CategoryPage from "./pages/Category"
 import Privacy from "./pages/Privacy"
 import NotFound from "./pages/NotFound"
+import Trending from "./pages/Trending"
+import TopGames from "./pages/TopGames"
 import { FSPlusProvider } from "./context/FSPlusContext"
 import FSPlusGate from "./components/FSPlusGate"
 const LazyAdmin = lazy(()=> import("./pages/admin/Admin"))
@@ -29,15 +31,17 @@ function App(){
               <Route path="/software" element={<Software/>} />
               <Route path="/game/:slug" element={<GameDetails/>} />
               <Route path="/software/:slug" element={<SoftwareDetails/>} />
-              <Route path="/search" element={<SearchPage/>} />
-              <Route path="/favorites" element={<Favorites/>} />
-              <Route path="/login" element={<Login/>} />
-              <Route path="/download/:id" element={<DownloadPage/>} />
-              <Route path="/category/:slug" element={<CategoryPage/>} />
-              <Route path="/privacy" element={<Privacy/>} />
-              <Route path="/dmca" element={<Privacy/>} />
-              <Route path="/admin" element={<Suspense fallback={<div className="py-10 text-white/50">Loading admin...</div>}><LazyAdmin/></Suspense>} />
-              <Route path="*" element={<NotFound/>} />
+            <Route path="/trending" element={<Trending/>} />
+            <Route path="/top-games" element={<TopGames/>} />
+            <Route path="/search" element={<SearchPage/>} />
+            <Route path="/favorites" element={<Favorites/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/download/:id" element={<DownloadPage/>} />
+            <Route path="/category/:slug" element={<CategoryPage/>} />
+            <Route path="/privacy" element={<Privacy/>} />
+            <Route path="/dmca" element={<Privacy/>} />
+            <Route path="/admin" element={<Suspense fallback={<div className="py-10 text-white/50">Loading admin...</div>}><LazyAdmin/></Suspense>} />
+            <Route path="*" element={<NotFound/>} />
             </Route>
           </Routes>
         </FSPlusGate>

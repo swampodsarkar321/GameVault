@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react"
-import GameCard from "../components/GameCard"
+import AnkerGameCard from "../components/anker/AnkerGameCard"
 import FilterBar from "../components/FilterBar"
 import SearchBar from "../components/SearchBar"
 import EmptyState from "../components/EmptyState"
@@ -17,7 +17,7 @@ export default function Games(){
   const [sort,setSort]=useState("newest")
   const [page,setPage]=useState(1)
   const pageSize=10
-  useEffect(()=>{ setPageMeta("Games","Browse freeware PC games"); fetchGames().then(g=>{ setGames(g); setLoading(false)}) },[])
+  useEffect(()=>{ setPageMeta("Free PC Games Download – Browse Freeware Games","Browse 1,200+ free PC games — freeware, open-source & demos. Filter by genre, platform. Download verified legal PC games on GameVault.", { canonical:"/games", keywords:"free PC games download, freeware games download, open source games download, PC games free"}); fetchGames().then(g=>{ setGames(g); setLoading(false)}) },[])
   const filtered = useMemo(()=>{
     let out=[...games]
     if(genre) out=out.filter(g=>g.genre.includes(genre))
@@ -37,7 +37,7 @@ export default function Games(){
       <div className="mt-4"><FilterBar genre={genre} setGenre={setGenre} platform={platform} setPlatform={setPlatform} sort={sort} setSort={setSort} genres={[...GAME_GENRES]} platforms={[...PLATFORMS]} /></div>
       {loading? <div className="mt-6"><GridSkeleton/></div> : paged.length===0 ? <div className="mt-6"><EmptyState title="No games found" description="Try adjusting filters or search." icon="game"/></div> :
         <>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-6">{paged.map((g:any)=><GameCard key={g.id} game={g}/>)}</div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-6">{paged.map((g:any,i:number)=><AnkerGameCard key={g.id} game={g} rank={(page-1)*pageSize + i +1} total={filtered.length} showRank />)}</div>
           <Pagination page={page} totalPages={totalPages} onChange={setPage}/>
         </>
       }
