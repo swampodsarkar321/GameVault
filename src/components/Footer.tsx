@@ -16,9 +16,10 @@ export default function Footer(){
         <div>
           <h4 className="font-semibold mb-3">Browse</h4>
           <ul className="space-y-2 text-sm text-white/60">
+            <li><Link to="/trending" className="hover:text-white">Trending</Link></li>
+            <li><Link to="/top-games" className="hover:text-white">Top Games</Link></li>
             <li><Link to="/games" className="hover:text-white">Games</Link></li>
             <li><Link to="/software" className="hover:text-white">Software</Link></li>
-            <li><Link to="/category/action" className="hover:text-white">Categories</Link></li>
             <li><Link to="/search" className="hover:text-white">Search</Link></li>
           </ul>
         </div>
