@@ -26,7 +26,15 @@ export default function DownloadPage(){
   const mirror = item.downloads?.[mirrorIndex] || item.downloads?.[0]
   const displayProvider = (()=>{ const p=(mirror?.provider||"").toString(); return p.toLowerCase().includes("fs") ? "Direct" : p })()
   const displayName = (()=>{ const n=(mirror?.name||"").toString(); return n.toLowerCase().includes("fs plus") ? "Primary — Direct" : n })()
-  const filename = `${item.title.replace(/[^a-z0-9]/gi,"_")}_v${item.version || "1.0"}.zip`
+  // Auto GameVault tag for all download file names
+  const getExt = (url:string)=>{
+    try { const p = new URL(url).pathname; const m = p.match(/\.([a-z0-9]+)$/i); if(m) return m[1].toLowerCase(); } catch {}
+    const m2 = (url||"").match(/\.([a-z0-9]+)(\?|$)/i); return m2? m2[1].toLowerCase() : "zip"
+  }
+  const ext = getExt(mirror?.url || "")
+  const safeExt = ["zip","rar","7z","exe","tar","gz"].includes(ext) ? ext : "zip"
+  const baseName = `GameVault_${item.title.replace(/[^a-z0-9]+/gi,"_").replace(/^_+|_+$/g,"")}_v${(item.version || "1.0").replace(/[^a-z0-9.-]/gi,"_")}`
+  const filename = `${baseName}.${safeExt}`
   const proxyUrl = `/api/download?url=${encodeURIComponent(mirror?.url || "")}&filename=${encodeURIComponent(filename)}`
 
   const handleFastDownload = async () => {
