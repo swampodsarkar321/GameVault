@@ -62,6 +62,10 @@ export default function Home(){
       </section>
       <CommunityReviews/>
 
+      <div className="mt-4 text-center">
+        <Link to="/free-pc-games-download" className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-semibold">Free PC Games Download — View All →</Link>
+      </div>
+
       {/* Blog for rank boost - internal linking */}
       <section className="mt-8">
         <h2 className="font-display font-bold text-xl text-white">From the Vault — Guides</h2>

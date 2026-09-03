@@ -18,6 +18,7 @@ import TopGames from "./pages/TopGames"
 import BestFreePCGames from "./pages/blog/BestFreePCGames"
 import FreeOpenSourceGames from "./pages/blog/FreeOpenSourceGames"
 import HowToDownloadFreeGames from "./pages/blog/HowToDownloadFreeGames"
+import FreePCGamesDownload from "./pages/FreePCGamesDownload"
 import { FSPlusProvider } from "./context/FSPlusContext"
 import FSPlusGate from "./components/FSPlusGate"
 import { useEffect } from "react"
@@ -52,6 +53,7 @@ function App(){
             <Route path="/blog/best-free-pc-games-2026" element={<BestFreePCGames/>} />
             <Route path="/blog/free-open-source-games" element={<FreeOpenSourceGames/>} />
             <Route path="/blog/how-to-download-free-games" element={<HowToDownloadFreeGames/>} />
+            <Route path="/free-pc-games-download" element={<FreePCGamesDownload/>} />
             <Route path="/search" element={<SearchPage/>} />
             <Route path="/favorites" element={<Favorites/>} />
             <Route path="/login" element={<Login/>} />
