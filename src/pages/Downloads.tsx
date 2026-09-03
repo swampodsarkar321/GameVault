@@ -5,8 +5,13 @@ import { setPageMeta } from "../utils/seo"
 import { useEffect } from "react"
 
 export default function Downloads(){
-  const { downloads, remove, clearCompleted } = useDownloads()
+  const { downloads, remove, clearCompleted, addDownload, updateProgress } = useDownloads()
   useEffect(()=> setPageMeta("Download Manager — Your Downloads", "View and manage your GameVault downloads — name, progress, status. High-speed via GameVault." ,{ canonical:"/downloads", keywords:"download manager, game downloads, free games download manager"}),[])
+  const testAdd = ()=>{
+    const id = addDownload({ title:"Test Game Download", filename:"Test_Game_v1.0.zip", size:"1.2 GB", url:"https://example.com/test.zip", cover: "" })
+    setTimeout(()=> updateProgress(id, 50, "downloading"), 300)
+    setTimeout(()=> updateProgress(id, 100, "completed"), 1200)
+  }
   return (
     <div className="py-6 max-w-3xl mx-auto">
       <Link to="/" className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white"><ArrowLeft className="w-4 h-4"/> Back</Link>
@@ -24,7 +29,11 @@ export default function Downloads(){
           <FolderOpen className="w-10 h-10 mx-auto text-white/20"/>
           <h3 className="font-semibold mt-3">No downloads yet</h3>
           <p className="text-sm text-white/50 mt-1">Home, Trending, Top Games, Games, Software — jekhane download click korbe, ekhane dekhte parbe.</p>
-          <Link to="/games" className="btn-primary mt-4">Browse Games</Link>
+          <div className="flex gap-2 justify-center mt-4">
+            <Link to="/games" className="btn-primary">Browse Games</Link>
+            <button onClick={testAdd} className="btn-ghost text-sm">Test Manager (add demo)</button>
+          </div>
+          <p className="text-[11px] text-white/30 mt-2">Test button diye check koro manager kaj kore kina — click korle demo download add hobe.</p>
         </div>
       ) : (
         <div className="grid gap-3 mt-6">

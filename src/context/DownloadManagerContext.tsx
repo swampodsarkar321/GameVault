@@ -28,10 +28,19 @@ export const useDownloads = ()=> useContext(Ctx)
 const KEY = "gv_downloads_v1"
 
 export function DownloadManagerProvider({ children }: { children: ReactNode }){
-  const [downloads, setDownloads] = useState<DLItem[]>(()=>{
-    try { const raw=localStorage.getItem(KEY); return raw? JSON.parse(raw): [] } catch { return [] }
-  })
-  useEffect(()=>{ localStorage.setItem(KEY, JSON.stringify(downloads.slice(0,50))) },[downloads])
+  const [downloads, setDownloads] = useState<DLItem[]>([])
+  const [hydrated, setHydrated] = useState(false)
+  useEffect(()=>{
+    try {
+      const raw = localStorage.getItem(KEY)
+      if(raw) setDownloads(JSON.parse(raw))
+    } catch {}
+    setHydrated(true)
+  },[])
+  useEffect(()=>{
+    if(!hydrated) return
+    try { localStorage.setItem(KEY, JSON.stringify(downloads.slice(0,50))) } catch {}
+  },[downloads, hydrated])
 
   const addDownload = (item: Omit<DLItem,"id"|"date"|"progress"|"status">)=>{
     const id = Date.now().toString(36)+Math.random().toString(36).slice(2,6)
