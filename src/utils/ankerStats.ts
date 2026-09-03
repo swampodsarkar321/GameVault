@@ -18,10 +18,11 @@ export type AnkerStats = {
 
 export function getAnkerStats(game: Game, rank: number, total: number): AnkerStats {
   const h = hashStr(game.id || game.slug)
-  // All time: 50k to 2.5M, higher rank = higher downloads, with some variance
-  const baseAll = Math.max(50000, Math.round((total - rank + 1) / total * 2400000 + (h % 200000)))
-  // Weekly: 2k to 45k
-  const weekly = 2000 + (h % 43000) + Math.max(0, (12 - rank) * 1200)
+  // Use real counts if available in Firestore (downloadsCount / weeklyDownloads)
+  const realAll = (game as any).downloadsCount ?? (game as any).allTimeDownloads
+  const realWeekly = (game as any).weeklyDownloads ?? (game as any).downloadsThisWeek
+  const baseAll = realAll ? Number(realAll) : Math.max(50000, Math.round((total - rank + 1) / total * 2400000 + (h % 200000)))
+  const weekly = realWeekly ? Number(realWeekly) : 2000 + (h % 43000) + Math.max(0, (12 - rank) * 1200)
   // Change -12 to +16
   const change = ((h % 29) - 14) // -14..14
   const prevRank = Math.max(1, Math.min(total, rank - change + (h % 3) -1))

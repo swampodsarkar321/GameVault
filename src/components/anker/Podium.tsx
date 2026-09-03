@@ -17,13 +17,13 @@ export default function Podium({ games }: { games: Game[] }){
         </div>
         <Link to="/top-games" className="ml-auto text-sm text-violet-300 hover:text-white">View top →</Link>
       </div>
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="flex md:grid md:grid-cols-3 gap-4 overflow-x-auto pb-2 snap-x snap-mandatory md:overflow-visible scrollbar-none -mx-4 px-4 md:mx-0 md:px-0">
         {top3.map((g,i)=>{
           const rank=i+1
           const stats=getAnkerStats(g, rank, top3.length)
           const isFirst=rank===1
           return (
-            <Link key={g.id} to={`/game/${g.slug}`} className={`group relative overflow-hidden rounded-[20px] border ${isFirst?"border-amber-400/30 bg-gradient-to-br from-amber-500/10 via-[#0F1424] to-[#0F1424]":"border-white/[0.06] bg-[#0F1424]"} p-4 hover:border-violet-500/30 transition`}>
+            <Link key={g.id} to={`/game/${g.slug}`} className={`group relative overflow-hidden rounded-[20px] border ${isFirst?"border-amber-400/30 bg-gradient-to-br from-amber-500/10 via-[#0F1424] to-[#0F1424]":"border-white/[0.06] bg-[#0F1424]"} p-4 hover:border-violet-500/30 transition snap-start shrink-0 w-[85%] md:w-auto`}>
               {isFirst && <div className="absolute top-3 right-3 text-[10px] font-black tracking-widest bg-amber-400 text-black px-2.5 py-1 rounded-full">REIGNING CHAMPION</div>}
               <div className="flex gap-4">
                 <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-white/10 bg-white/5">
