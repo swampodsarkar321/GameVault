@@ -404,10 +404,6 @@ function AdminAnalytics({ analytics, setAnalytics }: any){
           </ul>
         )}
       </div>
-      <div className="bg-[#1B2838] border border-[#2A475E] rounded p-5">
-        <h4 className="font-semibold text-sm flex items-center gap-2 text-[#C7D5E0]"><Megaphone className="w-4 h-4 text-amber-400"/> AdCash count kivabe hoy?</h4>
-        <p className="text-xs text-[#8F98A0] mt-1">Proti page view e <code className="bg-[#0F1922] border border-[#2A475E] px-1 rounded">aclib.runAutoTag({`{zoneId:'e6q6hxg91y'}`})</code> run hoy — tokhon <code className="bg-[#0F1922] px-1 rounded">trackAdImpression()</code> call hoye `analytics/ads` barbe. Ad blocker thakle count kom dekhabe — seta normal.</p>
-      </div>
     </div>
   )
 }
