@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Search, Heart, Menu, X, Gamepad2, LogOut, LayoutDashboard, User } from "lucide-react"
+import { Search, Heart, Menu, X, Gamepad2, LogOut, LayoutDashboard, User, Download } from "lucide-react"
 import { useAuth } from "../context/AuthContext"
 import { useFavorites } from "../context/FavoritesContext"
+import { useDownloads } from "../context/DownloadManagerContext"
 import { logout } from "../firebase/auth"
 
 export default function Navbar(){
@@ -11,6 +12,7 @@ export default function Navbar(){
   const nav = useNavigate()
   const { user, isAdmin } = useAuth()
   const { count } = useFavorites()
+  const { count: dlCount, activeCount } = useDownloads()
   const onSearch = (e:React.FormEvent)=>{ e.preventDefault(); if(q.trim()) nav(`/search?q=${encodeURIComponent(q.trim())}`)}
   return (
     <header className="sticky top-0 z-50 bg-[#070A12]/80 backdrop-blur-xl border-b border-white/[0.06]">
@@ -32,6 +34,9 @@ export default function Navbar(){
           <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search games, software..." className="bg-transparent outline-none flex-1 text-sm placeholder:text-white/40" />
         </form>
         <div className="flex items-center gap-2 ml-auto">
+          <Link to="/downloads" className="relative p-2.5 rounded-xl bg-violet-600/20 border border-violet-500/30 hover:bg-violet-600/30 hidden sm:inline-flex text-violet-300" title="Download Manager — user theke download dekhte parbe">
+            <Download className="w-4 h-4" /> {dlCount>0 && <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-violet-600 text-white text-xs rounded-full grid place-items-center font-bold px-1">{activeCount>0? activeCount : dlCount}</span>}
+          </Link>
           <Link to="/favorites" className="relative p-2.5 rounded-xl bg-white/[0.06] border border-white/[0.06] hover:bg-white/[0.10] hidden sm:inline-flex">
             <Heart className="w-4 h-4" /> {count>0 && <span className="absolute -top-1 -right-1 w-5 h-5 bg-violet-600 text-white text-xs rounded-full grid place-items-center font-bold">{count}</span>}
           </Link>
@@ -58,6 +63,7 @@ export default function Navbar(){
             <Link to="/top-games" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5">Top Games</Link>
             <Link to="/games" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5">Games</Link>
             <Link to="/software" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5">Software</Link>
+            <Link to="/downloads" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-violet-600/20 border border-violet-500/20 text-violet-300 flex items-center gap-2"><Download className="w-4 h-4"/>Downloads {dlCount>0 && `(${dlCount})`}</Link>
             <Link to="/favorites" onClick={()=>setOpen(false)} className="px-3 py-2 rounded-lg bg-white/5 flex items-center gap-2"><Heart className="w-4 h-4"/>Favorites ({count})</Link>
           </div>
           {!user ? <Link to="/login" onClick={()=>setOpen(false)} className="btn-primary w-full justify-center">Login / Register</Link> : <button onClick={()=>{logout(); setOpen(false)}} className="btn-ghost w-full justify-center">Logout</button>}

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { ShieldCheck, Download, ArrowLeft, FolderOpen, Zap, ExternalLink, Loader2 } from "lucide-react"
 import { fetchGameById, fetchSoftwareById } from "../firebase/firestore"
 import { setPageMeta } from "../utils/seo"
+import { useDownloads } from "../context/DownloadManagerContext"
 
 export default function DownloadPage(){
   const { id } = useParams()
@@ -10,9 +11,11 @@ export default function DownloadPage(){
   const mirrorIndex = parseInt(sp.get("mirror")||"0",10)
   const [item,setItem]=useState<any>(null)
   const [loading,setLoading]=useState(true)
+  const { addDownload, updateProgress } = useDownloads()
   const [downloading,setDownloading]=useState(false)
   const [progress,setProgress]=useState(0)
   const [error,setError]=useState<string | null>(null)
+  const [activeId,setActiveId]=useState<string|null>(null)
   useEffect(()=>{
     if(!id) return
     Promise.all([fetchGameById(id), fetchSoftwareById(id)]).then(([g,s])=>{
@@ -31,6 +34,10 @@ export default function DownloadPage(){
   const handleFastDownload = async () => {
     setError(null)
     if (!mirror?.url) { setError("No download URL configured. Add real freeware mirror in Firebase (see realFreewareSeed.ts)."); return }
+    // Register in Download Manager (user dekhte parbe)
+    const dlId = addDownload({ title: item.title, filename, size: item.size || mirror.size || "—", url: mirror.url, cover: item.coverImage || item.logo })
+    setActiveId(dlId)
+    updateProgress(dlId, 0, "downloading")
     setDownloading(true)
     setProgress(0)
     try {
@@ -42,10 +49,8 @@ export default function DownloadPage(){
             types: [{ description: "Game Archive", accept: { "application/octet-stream": [".zip",".rar",".7z",".exe"] } }],
           })
           const writable = await handle.createWritable()
-          // Try proxy first, fallback to direct if proxy fails (e.g., server error or large file redirect)
           let res = await fetch(proxyUrl)
           if (!res.ok) {
-            // Proxy failed (e.g., 502), try direct mirror
             console.warn("proxy failed", res.status, "fallback to direct")
             res = await fetch(mirror.url)
             if (!res.ok) throw new Error(`Direct ${res.status}`)
@@ -60,20 +65,21 @@ export default function DownloadPage(){
             if (value) {
               await writable.write(value)
               received += value.length
-              if (total) setProgress(Math.round(received/total*100))
+              const pct = total ? Math.round(received/total*100) : 0
+              if (total) { setProgress(pct); updateProgress(dlId, pct, "downloading") }
             }
           }
           await writable.close()
           setProgress(100)
+          updateProgress(dlId, 100, "completed")
           setTimeout(()=> setDownloading(false), 800)
           return
         } catch (e:any) {
-          if (e?.name === "AbortError") { setDownloading(false); return }
+          if (e?.name === "AbortError") { updateProgress(dlId, 0, "queued"); setDownloading(false); return }
           console.warn("picker failed, fallback to anchor", e)
-          // don't throw yet, go to anchor fallback
         }
       }
-      // Fallback: anchor via proxy, if proxy returns 302 it will redirect to direct for large files
+      // Fallback: anchor via proxy
       const a = document.createElement("a")
       a.href = proxyUrl
       a.download = filename
@@ -81,19 +87,20 @@ export default function DownloadPage(){
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
-      // If proxy still errors, after 1.5s also try direct
+      // Optimistically mark as downloading, then completed after short delay
+      updateProgress(dlId, 30, "downloading")
       setTimeout(async ()=>{
         try {
           const test = await fetch(proxyUrl, { method: "HEAD" })
-          if (!test.ok) {
-            window.open(mirror.url, "_blank")
-          }
-        } catch {}
+          if (!test.ok) { window.open(mirror.url, "_blank"); updateProgress(dlId, 100, "completed") }
+          else updateProgress(dlId, 100, "completed")
+        } catch { updateProgress(dlId, 100, "completed") }
         setDownloading(false)
+        setProgress(100)
       }, 1500)
     } catch (e:any) {
+      updateProgress(dlId, 0, "failed")
       setError(e?.message || "Download failed — trying direct mirror...")
-      // Final fallback: open direct mirror
       try { window.open(mirror?.url, "_blank") } catch {}
       setDownloading(false)
     }
@@ -116,6 +123,9 @@ export default function DownloadPage(){
         </button>
         {downloading && progress>0 && (
           <div className="mt-3 h-2 bg-white/10 rounded-full overflow-hidden"><div className="h-full bg-violet-500 transition-all" style={{width: `${progress}%`}}/></div>
+        )}
+        {(downloading || activeId) && (
+          <Link to="/downloads" className="mt-3 flex items-center justify-center gap-2 text-xs text-violet-300 hover:text-white bg-violet-500/10 border border-violet-500/20 rounded-xl py-2">View in Download Manager → {activeId && <span className="text-white/50">({progress}%)</span>}</Link>
         )}
         {error && <div className="mt-3 text-xs text-red-300 bg-red-500/10 border border-red-500/20 rounded-xl p-2">{error}</div>}
 

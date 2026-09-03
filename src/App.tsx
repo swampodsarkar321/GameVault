@@ -15,13 +15,16 @@ import Privacy from "./pages/Privacy"
 import NotFound from "./pages/NotFound"
 import Trending from "./pages/Trending"
 import TopGames from "./pages/TopGames"
+import Downloads from "./pages/Downloads"
 import { FSPlusProvider } from "./context/FSPlusContext"
+import { DownloadManagerProvider } from "./context/DownloadManagerContext"
 import FSPlusGate from "./components/FSPlusGate"
 const LazyAdmin = lazy(()=> import("./pages/admin/Admin"))
 
 function App(){
   return (
     <FSPlusProvider>
+      <DownloadManagerProvider>
       <BrowserRouter>
         <FSPlusGate>
           <Routes>
@@ -33,6 +36,7 @@ function App(){
               <Route path="/software/:slug" element={<SoftwareDetails/>} />
             <Route path="/trending" element={<Trending/>} />
             <Route path="/top-games" element={<TopGames/>} />
+            <Route path="/downloads" element={<Downloads/>} />
             <Route path="/search" element={<SearchPage/>} />
             <Route path="/favorites" element={<Favorites/>} />
             <Route path="/login" element={<Login/>} />
@@ -46,6 +50,7 @@ function App(){
           </Routes>
         </FSPlusGate>
       </BrowserRouter>
+      </DownloadManagerProvider>
     </FSPlusProvider>
   )
 }
