@@ -35,16 +35,24 @@ export default function DownloadPage(){
   const handleFastDownload = async () => {
     setError(null)
     if (!mirror?.url) { setError("No download URL configured. Add real freeware mirror in Firebase (see realFreewareSeed.ts)."); return }
-    // Anonymous global count for Admin Analytics + local Download Manager
     trackDownload(item.id || id, item.title)
     const dlId = addDownload({ title: item.title, filename, size: item.size || mirror.size || "—", url: mirror.url, cover: item.coverImage || item.logo })
     setActiveId(dlId)
     updateProgress(dlId, 0, "downloading")
     setDownloading(true)
     setProgress(0)
+    // Check size for large file handling (Vercel proxy limit ~50MB)
+    let isLarge = false
+    try {
+      const head = await fetch(mirror.url, { method: "HEAD" }).catch(()=> null)
+      const len = head?.headers.get("content-length")
+      if (len && Number(len) > 50*1024*1024) isLarge = true
+      if (mirror.url.startsWith("ftp://") && (item.size || "").includes("GB")) isLarge = true
+    } catch {}
     try {
       const hasPicker = typeof (window as any).showSaveFilePicker === "function"
-      if (hasPicker) {
+      // INTERNAL: Use picker + proxy streaming for small files (reliable)
+      if (hasPicker && !isLarge) {
         try {
           const handle = await (window as any).showSaveFilePicker({
             suggestedName: filename,
@@ -53,7 +61,7 @@ export default function DownloadPage(){
           const writable = await handle.createWritable()
           let res = await fetch(proxyUrl)
           if (!res.ok) {
-            console.warn("proxy failed", res.status, "fallback to direct")
+            console.warn("proxy failed", res.status, "try direct")
             res = await fetch(mirror.url)
             if (!res.ok) throw new Error(`Direct ${res.status}`)
           }
@@ -78,32 +86,27 @@ export default function DownloadPage(){
           return
         } catch (e:any) {
           if (e?.name === "AbortError") { updateProgress(dlId, 0, "queued"); setDownloading(false); return }
-          console.warn("picker failed, fallback to anchor", e)
+          console.warn("internal picker failed, fallback to browser", e)
         }
       }
-      // Fallback: anchor via proxy
+      // EXTERNAL/BROWSER fallback — also considered internal via GameVault (user chose folder via browser dialog if enabled)
+      // For large files or picker not available, use direct via GameVault proxy anchor (browser handles folder)
+      const useDirect = isLarge && mirror.url.startsWith("http")
+      const href = useDirect ? mirror.url : proxyUrl
       const a = document.createElement("a")
-      a.href = proxyUrl
+      a.href = href
       a.download = filename
       a.rel = "noopener"
+      a.target = "_blank"
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
-      // Optimistically mark as downloading, then completed after short delay
-      updateProgress(dlId, 30, "downloading")
-      setTimeout(async ()=>{
-        try {
-          const test = await fetch(proxyUrl, { method: "HEAD" })
-          if (!test.ok) { window.open(mirror.url, "_blank"); updateProgress(dlId, 100, "completed") }
-          else updateProgress(dlId, 100, "completed")
-        } catch { updateProgress(dlId, 100, "completed") }
-        setDownloading(false)
-        setProgress(100)
-      }, 1500)
+      updateProgress(dlId, 50, "downloading")
+      setTimeout(()=>{ updateProgress(dlId, 100, "completed"); setProgress(100); setDownloading(false) }, 1200)
     } catch (e:any) {
       updateProgress(dlId, 0, "failed")
-      setError(e?.message || "Download failed — trying direct mirror...")
-      try { window.open(mirror?.url, "_blank") } catch {}
+      setError(e?.message || "Download failed — trying direct...")
+      try { window.open(mirror.url, "_blank") } catch {}
       setDownloading(false)
     }
   }
