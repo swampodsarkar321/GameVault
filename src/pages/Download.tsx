@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 import { ShieldCheck, Download, ArrowLeft, FolderOpen, Zap, ExternalLink, Loader2 } from "lucide-react"
 import { fetchGameById, fetchSoftwareById } from "../firebase/firestore"
 import { setPageMeta } from "../utils/seo"
-import { useDownloads } from "../context/DownloadManagerContext"
 import { trackDownload } from "../utils/analytics"
 
 export default function DownloadPage(){
@@ -12,11 +11,9 @@ export default function DownloadPage(){
   const mirrorIndex = parseInt(sp.get("mirror")||"0",10)
   const [item,setItem]=useState<any>(null)
   const [loading,setLoading]=useState(true)
-  const { addDownload, updateProgress } = useDownloads()
   const [downloading,setDownloading]=useState(false)
   const [progress,setProgress]=useState(0)
   const [error,setError]=useState<string | null>(null)
-  const [activeId,setActiveId]=useState<string|null>(null)
   useEffect(()=>{
     if(!id) return
     Promise.all([fetchGameById(id), fetchSoftwareById(id)]).then(([g,s])=>{
@@ -36,12 +33,8 @@ export default function DownloadPage(){
     setError(null)
     if (!mirror?.url) { setError("No download URL configured. Add real freeware mirror in Firebase (see realFreewareSeed.ts)."); return }
     trackDownload(item.id || id, item.title)
-    const dlId = addDownload({ title: item.title, filename, size: item.size || mirror.size || "—", url: mirror.url, cover: item.coverImage || item.logo })
-    setActiveId(dlId)
-    updateProgress(dlId, 0, "downloading")
     setDownloading(true)
     setProgress(0)
-    // Check size for large file handling (Vercel proxy limit ~50MB)
     let isLarge = false
     try {
       const head = await fetch(mirror.url, { method: "HEAD" }).catch(()=> null)
@@ -51,7 +44,6 @@ export default function DownloadPage(){
     } catch {}
     try {
       const hasPicker = typeof (window as any).showSaveFilePicker === "function"
-      // INTERNAL: Use picker + proxy streaming for small files (reliable)
       if (hasPicker && !isLarge) {
         try {
           const handle = await (window as any).showSaveFilePicker({
@@ -76,21 +68,18 @@ export default function DownloadPage(){
               await writable.write(value)
               received += value.length
               const pct = total ? Math.round(received/total*100) : 0
-              if (total) { setProgress(pct); updateProgress(dlId, pct, "downloading") }
+              if (total) setProgress(pct)
             }
           }
           await writable.close()
           setProgress(100)
-          updateProgress(dlId, 100, "completed")
           setTimeout(()=> setDownloading(false), 800)
           return
         } catch (e:any) {
-          if (e?.name === "AbortError") { updateProgress(dlId, 0, "queued"); setDownloading(false); return }
-          console.warn("internal picker failed, fallback to browser", e)
+          if (e?.name === "AbortError") { setDownloading(false); return }
+          console.warn("picker failed, fallback", e)
         }
       }
-      // EXTERNAL/BROWSER fallback — also considered internal via GameVault (user chose folder via browser dialog if enabled)
-      // For large files or picker not available, use direct via GameVault proxy anchor (browser handles folder)
       const useDirect = isLarge && mirror.url.startsWith("http")
       const href = useDirect ? mirror.url : proxyUrl
       const a = document.createElement("a")
@@ -101,10 +90,9 @@ export default function DownloadPage(){
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
-      updateProgress(dlId, 50, "downloading")
-      setTimeout(()=>{ updateProgress(dlId, 100, "completed"); setProgress(100); setDownloading(false) }, 1200)
+      setProgress(50)
+      setTimeout(()=>{ setProgress(100); setDownloading(false) }, 1200)
     } catch (e:any) {
-      updateProgress(dlId, 0, "failed")
       setError(e?.message || "Download failed — trying direct...")
       try { window.open(mirror.url, "_blank") } catch {}
       setDownloading(false)
@@ -128,9 +116,6 @@ export default function DownloadPage(){
         </button>
         {downloading && progress>0 && (
           <div className="mt-3 h-2 bg-white/10 rounded-full overflow-hidden"><div className="h-full bg-violet-500 transition-all" style={{width: `${progress}%`}}/></div>
-        )}
-        {(downloading || activeId) && (
-          <Link to="/downloads" className="mt-3 flex items-center justify-center gap-2 text-xs text-violet-300 hover:text-white bg-violet-500/10 border border-violet-500/20 rounded-xl py-2">View in Download Manager → {activeId && <span className="text-white/50">({progress}%)</span>}</Link>
         )}
         {error && <div className="mt-3 text-xs text-red-300 bg-red-500/10 border border-red-500/20 rounded-xl p-2">{error}</div>}
 
