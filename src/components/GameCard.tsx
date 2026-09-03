@@ -8,9 +8,16 @@ export default function GameCard({ game }: { game: Game }){
   const fav = isFav(game.id)
   const genre = arr((game as any).genre)
   return (
-    <div className="group bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 hover:bg-[#141B31] rounded-2xl overflow-hidden flex flex-col transition">
+    <div className="group bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 hover:bg-[#141B31] rounded-2xl overflow-hidden flex flex-col transition card-shimmer">
       <Link to={`/game/${game.slug}`} className="relative block overflow-hidden">
-        <img src={game.coverImage} alt={game.title} loading="lazy" className="w-full h-[210px] object-cover group-hover:scale-[1.04] transition duration-500" />
+        {game.trailer ? (
+          <>
+            <img src={game.coverImage} alt={game.title} loading="lazy" className="w-full h-[210px] object-cover group-hover:opacity-0 transition duration-300" />
+            <video src={game.trailer} muted loop autoPlay playsInline className="absolute inset-0 w-full h-[210px] object-cover opacity-0 group-hover:opacity-100 transition duration-300" />
+          </>
+        ) : (
+          <img src={game.coverImage} alt={game.title} loading="lazy" className="w-full h-[210px] object-cover group-hover:scale-[1.04] transition duration-500" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
         <div className="absolute bottom-2 left-2 right-2 flex gap-1.5 flex-wrap opacity-0 group-hover:opacity-100 transition">
           {genre.slice(0,2).map(g=> <span key={g} className="text-[11px] px-2 py-1 rounded-full bg-black/40 backdrop-blur border border-white/10 text-white">{g}</span>)}

@@ -2,18 +2,20 @@ import type { Game } from "../../types"
 import AnkerGameCard from "./AnkerGameCard"
 import { Link } from "react-router-dom"
 import { TrendingUp, ArrowUpDown } from "lucide-react"
+import { useLiveCount, LiveBadge, TrendingPulse } from "../LivePulse"
 
 type Props = { games: Game[]; title?: string; limit?: number }
 
 export default function TrendingBoard({ games, title="Trending Games", limit=8 }: Props){
   const slice = games.slice(0, limit)
+  const { count, pulse } = useLiveCount(9)
   return (
     <section className="mt-8">
       <div className="flex items-center gap-3 mb-3">
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-500 grid place-items-center"><TrendingUp className="w-5 h-5 text-white"/></div>
         <div>
-          <h2 className="font-display font-bold text-xl leading-none flex items-center gap-2">{title} <span className="text-xs font-normal px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300">Last 7 days</span></h2>
-          <p className="text-xs text-white/40">Ranked by how many times it was <b className="text-white/60">actually downloaded here in the last 7 days</b> • counted on a rolling basis</p>
+          <h2 className="font-display font-bold text-xl leading-none flex items-center gap-2">{title} <span className="text-xs font-normal px-2 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/20 text-emerald-300">Last 7 days</span> <LiveBadge count={count} pulse={pulse}/></h2>
+          <p className="text-xs text-white/40 flex items-center gap-2">Ranked by how many times it was <b className="text-white/60">actually downloaded here in the last 7 days</b> • <TrendingPulse/></p>
         </div>
         <Link to="/trending" className="ml-auto hidden sm:inline-flex text-sm text-violet-300 hover:text-white">See trending →</Link>
       </div>

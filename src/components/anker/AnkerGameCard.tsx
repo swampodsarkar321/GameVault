@@ -47,14 +47,21 @@ export default function AnkerGameCard({ game, rank, total, showRank, variant="gr
 
   // Grid card - Anker A-Z: cover top, then title, meta, size, two buttons
   return (
-    <div className="group bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 hover:bg-[#141B31] rounded-2xl overflow-hidden transition flex flex-col">
+    <div className="group bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 hover:bg-[#141B31] rounded-2xl overflow-hidden transition flex flex-col card-shimmer">
       <Link to={`/game/${game.slug}`} className="relative block overflow-hidden">
         {showRank && rank && (
           <div className="absolute top-2 left-2 z-10 w-7 h-7 rounded-full bg-black/70 backdrop-blur border border-white/15 grid place-items-center text-xs font-bold text-white">
             {String(rank).padStart(2,"0")}
           </div>
         )}
-        <img src={game.coverImage} alt={game.title} loading="lazy" className="w-full h-[190px] object-cover group-hover:scale-[1.03] transition duration-500"/>
+        {game.trailer ? (
+          <>
+            <img src={game.coverImage} alt={game.title} loading="lazy" className="w-full h-[190px] object-cover group-hover:opacity-0 transition duration-300"/>
+            <video src={game.trailer} muted loop autoPlay playsInline className="absolute inset-0 w-full h-[190px] object-cover opacity-0 group-hover:opacity-100 transition duration-300"/>
+          </>
+        ) : (
+          <img src={game.coverImage} alt={game.title} loading="lazy" className="w-full h-[190px] object-cover group-hover:scale-[1.03] transition duration-500"/>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition"/>
         <div className="absolute bottom-2 left-2 right-2 flex gap-1.5 flex-wrap">
           {Array.isArray(game.genre) && game.genre.slice(0,2).map(g=> <span key={g} className="text-[10px] font-bold tracking-widest px-2 py-1 rounded-full bg-black/60 backdrop-blur border border-white/10 text-white/80">{g}</span>)}

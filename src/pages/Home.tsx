@@ -5,6 +5,8 @@ import GameCard from "../components/GameCard"
 import AnkerGameCard from "../components/anker/AnkerGameCard"
 import Podium from "../components/anker/Podium"
 import TrendingBoard from "../components/anker/TrendingBoard"
+import RecentTicker from "../components/RecentTicker"
+import CommunityReviews from "../components/CommunityReviews"
 import SoftwareCard from "../components/SoftwareCard"
 import { GridSkeleton } from "../components/LoadingSkeleton"
 import { fetchGames, fetchSoftware } from "../firebase/firestore"
@@ -26,6 +28,8 @@ export default function Home(){
   return (
     <div className="pb-6">
       <Hero/>
+      {/* Live recent ticker */}
+      <RecentTicker/>
       {/* Anker-style Podium */}
       {loading ? <div className="mt-8"><GridSkeleton count={3}/></div> : <Podium games={topGames} />}
       {/* Anker-style Trending Board */}
@@ -56,6 +60,7 @@ export default function Home(){
         <div><h3 className="font-display font-bold text-lg text-white">Get weekly drops</h3><p className="text-sm text-white/60">New freeware & open-source picks — no spam. Anker A-Z weekly chart every 7 days.</p></div>
         <form onSubmit={e=>e.preventDefault()} className="flex gap-2 w-full md:w-auto"><input placeholder="you@email.com" className="flex-1 md:w-72 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm outline-none text-white placeholder:text-white/40"/><button className="btn-primary">Subscribe</button></form>
       </section>
+      <CommunityReviews/>
 
       {/* Visible FAQ - Anker */}
       <section className="mt-8 card p-6">

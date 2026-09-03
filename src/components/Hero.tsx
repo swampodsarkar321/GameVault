@@ -1,14 +1,22 @@
 import { Link, useNavigate } from "react-router-dom"
 import { Sparkles, ArrowRight, Search, TrendingUp, Flame } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useLiveCount, LiveBadge } from "./LivePulse"
 export default function Hero(){
   const [q,setQ]=useState("")
   const nav=useNavigate()
+  const { count, pulse } = useLiveCount(12)
+  const [parallax,setParallax]=useState(0)
+  useEffect(()=>{
+    const onScroll=()=> setParallax(window.scrollY*0.08)
+    window.addEventListener("scroll", onScroll)
+    return ()=> window.removeEventListener("scroll", onScroll)
+  },[])
   const onSearch=(e:React.FormEvent)=>{e.preventDefault(); if(q.trim()) nav(`/search?q=${encodeURIComponent(q.trim())}`)}
   return (
     <section className="relative overflow-hidden rounded-[28px] border border-white/[0.06] bg-gradient-to-br from-[#0F1424] via-[#101636] to-[#0F1424] p-6 md:p-10 mt-6">
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-transparent to-cyan-400/10 pointer-events-none" />
-      <div className="absolute -top-24 -right-24 w-[520px] h-[520px] bg-violet-600/20 blur-[90px] rounded-full pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-transparent to-cyan-400/10 pointer-events-none" style={{transform:`translateY(${parallax*0.5}px)`}}/>
+      <div className="absolute -top-24 -right-24 w-[520px] h-[520px] bg-violet-600/20 blur-[90px] rounded-full pointer-events-none" style={{transform:`translateY(${parallax}px)`}}/>
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[200px] bg-gradient-to-t from-violet-600/10 to-transparent pointer-events-none" />
       <div className="relative grid lg:grid-cols-[1.15fr_0.85fr] gap-8 items-center">
         <div>
@@ -31,10 +39,11 @@ export default function Hero(){
             <Link to="/top-games" className="btn-ghost"><Flame className="w-4 h-4"/> Top Games</Link>
             <Link to="/games" className="btn-ghost">Browse <ArrowRight className="w-4 h-4"/></Link>
           </div>
-          <div className="flex gap-6 mt-6 text-xs">
+          <div className="flex flex-wrap gap-6 mt-6 text-xs items-center">
             <div><div className="font-bold text-white text-lg leading-none">55K+</div><div className="text-white/40">verified downloads</div></div>
-            <div className="w-px bg-white/10"/><div><div className="font-bold text-white text-lg leading-none">1.2K+</div><div className="text-white/40">freeware titles</div></div>
-            <div className="w-px bg-white/10"/><div><div className="font-bold text-white text-lg leading-none">100%</div><div className="text-white/40">legal & safe</div></div>
+            <div className="w-px bg-white/10 hidden sm:block"/><div><div className="font-bold text-white text-lg leading-none">1.2K+</div><div className="text-white/40">freeware titles</div></div>
+            <div className="w-px bg-white/10 hidden sm:block"/><div><div className="font-bold text-white text-lg leading-none">100%</div><div className="text-white/40">legal & safe</div></div>
+            <div className="w-px bg-white/10 hidden sm:block"/><LiveBadge count={count} pulse={pulse}/>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
