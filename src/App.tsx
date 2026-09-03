@@ -15,6 +15,9 @@ import Privacy from "./pages/Privacy"
 import NotFound from "./pages/NotFound"
 import Trending from "./pages/Trending"
 import TopGames from "./pages/TopGames"
+import BestFreePCGames from "./pages/blog/BestFreePCGames"
+import FreeOpenSourceGames from "./pages/blog/FreeOpenSourceGames"
+import HowToDownloadFreeGames from "./pages/blog/HowToDownloadFreeGames"
 import { FSPlusProvider } from "./context/FSPlusContext"
 import FSPlusGate from "./components/FSPlusGate"
 import { useEffect } from "react"
@@ -46,6 +49,9 @@ function App(){
               <Route path="/software/:slug" element={<SoftwareDetails/>} />
             <Route path="/trending" element={<Trending/>} />
             <Route path="/top-games" element={<TopGames/>} />
+            <Route path="/blog/best-free-pc-games-2026" element={<BestFreePCGames/>} />
+            <Route path="/blog/free-open-source-games" element={<FreeOpenSourceGames/>} />
+            <Route path="/blog/how-to-download-free-games" element={<HowToDownloadFreeGames/>} />
             <Route path="/search" element={<SearchPage/>} />
             <Route path="/favorites" element={<Favorites/>} />
             <Route path="/login" element={<Login/>} />

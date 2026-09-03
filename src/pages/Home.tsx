@@ -62,6 +62,22 @@ export default function Home(){
       </section>
       <CommunityReviews/>
 
+      {/* Blog for rank boost - internal linking */}
+      <section className="mt-8">
+        <h2 className="font-display font-bold text-xl text-white">From the Vault — Guides</h2>
+        <div className="grid md:grid-cols-3 gap-4 mt-4">
+          <Link to="/blog/best-free-pc-games-2026" className="bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 rounded-2xl p-4 block">
+            <div className="text-xs text-violet-300">Guide • 7 min</div><div className="font-semibold text-white mt-1">Best Free PC Games 2026</div><div className="text-xs text-white/50 mt-1">Top freeware games download on GameVault — 0 A.D., OpenTTD...</div>
+          </Link>
+          <Link to="/blog/free-open-source-games" className="bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 rounded-2xl p-4 block">
+            <div className="text-xs text-emerald-300">Open Source • 5 min</div><div className="font-semibold text-white mt-1">Free Open Source Games</div><div className="text-xs text-white/50 mt-1">Unciv, Wesnoth, Xonotic — legal open source PC games</div>
+          </Link>
+          <Link to="/blog/how-to-download-free-games" className="bg-[#0F1424] border border-white/[0.06] hover:border-violet-500/30 rounded-2xl p-4 block">
+            <div className="text-xs text-cyan-300">How-to • 5 min</div><div className="font-semibold text-white mt-1">How to Download Legally</div><div className="text-xs text-white/50 mt-1">Choose Folder, high-speed via GameVault, 100% legal</div>
+          </Link>
+        </div>
+      </section>
+
       {/* Visible FAQ - Anker */}
       <section className="mt-8 card p-6">
         <h2 className="font-display font-bold text-lg mb-4">Frequently Asked Questions</h2>
