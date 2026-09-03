@@ -1,4 +1,4 @@
-const SITE_URL = "https://gamevault.vercel.app"
+const SITE_URL = "https://gamevault-kappa-six.vercel.app"
 
 type SeoOpts = {
   canonical?: string
